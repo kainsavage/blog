@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  main:
+    stdin_open: true
+    tty: true
+    container_name: blog
+    restart: always
+    build:
+      context: .
+    ports:
+      - "80:3000"
+    networks:
+      - web-network
+
+networks:
+  web-network:
+    external: true
