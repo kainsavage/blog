@@ -1,7 +1,6 @@
 import '@mantine/core/styles.css';
 import './globals.css';
-import 'prismjs/themes/prism.css';
-import 'prismjs/themes/prism-tomorrow.css';
+import './prism.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
@@ -25,6 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
+        <script type="text/javascript" src="/scripts/prism.js" async />
       </head>
       <body className={inter.className}>
         <MantineProvider theme={theme}>
