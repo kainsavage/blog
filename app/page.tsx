@@ -1,6 +1,17 @@
 import Markdown from '@/components/Markdown';
+import postgres from 'postgres';
 
-export default function Home() {
+export default async function Home() {
+  const sql = postgres({
+    host: 'localhost',
+    port: 5432,
+    database: 'root',
+    username: 'root',
+    password: 'root',
+  });
+  const test = await sql`SELECT 1`;
+  console.log(test);
+
   const markdown = `# Welcome to my MDX page!
  
 This is some **bold** and _italics_ text.

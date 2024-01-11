@@ -12,7 +12,7 @@ services:
       context: .
     volumes:
       - ./app:/app/app
-      - ./.env:/app/.env
+      - ./.env.local:/app/.env.local
       - ./.eslintrc.json:/app/.eslintrc.json
       - ./.prettierrc:/app/.prettierrc
       - ./tsconfig.json:/app/tsconfig.json
