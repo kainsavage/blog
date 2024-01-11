@@ -1,18 +1,60 @@
 version: '3.8'
 
 services:
-  main:
+  application_server:
     stdin_open: true
     tty: true
-    container_name: blog
+    container_name: application_server
     restart: always
+    depends_on:
+      - postgres_container
     build:
       context: .
+    volumes:
+      - ./app:/app/app
+      - ./.env:/app/.env
+      - ./.eslintrc.json:/app/.eslintrc.json
+      - ./.prettierrc:/app/.prettierrc
+      - ./tsconfig.json:/app/tsconfig.json
     ports:
       - "80:3000"
     networks:
-      - web-network
+      - blog-network
+
+  postgres_container:
+    container_name: postgres_container
+    hostname: postgres_container
+    image: postgres:16.1
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_container:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -h welby_postgres_container
+      timeout: 25s
+      retries: 2
+    networks:
+      - blog-network
+
+  # Simple database management tool
+  adminer:
+    image: library/adminer:4.8.1
+    depends_on:
+      - postgres_container
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres_container:5432
+    networks:
+      - blog-network
+
+volumes:
+  postgres_data_container:
 
 networks:
-  web-network:
+  blog-network:
     external: true
