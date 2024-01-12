@@ -15,7 +15,11 @@ export const metadata: Metadata = {
   description: 'Teamclerks Blog',
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <html lang="en">
       <head>
@@ -25,6 +29,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
         <script type="text/javascript" src="/scripts/prism.js" async />
+        <title>Teamclerks Blog</title>
       </head>
       <body className={inter.className}>
         <MantineProvider theme={theme}>

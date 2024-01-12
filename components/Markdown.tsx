@@ -1,9 +1,18 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { HTMLAttributes, useEffect, useRef, useState } from 'react';
 import { md2html } from '@/helpers/markdown';
 
-export default function Markdown({ markdown }: { markdown: string }) {
+/**
+ * Renders markdown as HTML.
+ */
+export default function Markdown({
+  markdown,
+  className,
+}: {
+  markdown: string;
+  className?: HTMLAttributes<HTMLDivElement>['className'];
+}) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [html, setHtml] = useState<string | undefined>(undefined);
 
@@ -24,5 +33,11 @@ export default function Markdown({ markdown }: { markdown: string }) {
     window.Prism.highlightAllUnder(ref.current);
   }, [html]);
 
-  return <div dangerouslySetInnerHTML={{ __html: html! }} ref={ref} />;
+  return (
+    <div
+      className={className || ''}
+      dangerouslySetInnerHTML={{ __html: html! }}
+      ref={ref}
+    />
+  );
 }

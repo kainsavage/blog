@@ -1,6 +1,25 @@
 version: '3.8'
 
 services:
+  postgres_container:
+    container_name: postgres_container
+    hostname: postgres_container
+    image: postgres:16.1
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_container:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -h postgres_container
+      timeout: 25s
+      retries: 2
+    networks:
+      - blog-network
+
   application_server:
     stdin_open: true
     tty: true
@@ -18,25 +37,6 @@ services:
       - ./tsconfig.json:/app/tsconfig.json
     ports:
       - "80:3000"
-    networks:
-      - blog-network
-
-  postgres_container:
-    container_name: postgres_container
-    hostname: postgres_container
-    image: postgres:16.1
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: root
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data_container:/var/lib/postgresql/data
-    healthcheck:
-      test: pg_isready -h welby_postgres_container
-      timeout: 25s
-      retries: 2
     networks:
       - blog-network
 

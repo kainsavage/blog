@@ -1,8 +1,10 @@
 'use client';
 
-import { AppShell, Burger, Group, Skeleton, Text } from '@mantine/core';
+import { AppShell, Burger, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { ReactNode } from 'react';
+import NavBar from '@/components/Navbar';
+import Link from 'next/link';
 
 export default function TeamclerksAppShell({
   children,
@@ -25,26 +27,21 @@ export default function TeamclerksAppShell({
         breakpoint: 'md',
         collapsed: { desktop: false, mobile: true },
       }}
+      className="min-w-full md:min-w-0"
     >
       <AppShell.Header>
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Text>Teamclerks Blog</Text>
+          <Link href="/" className="text-3xl">
+            Teamclerks Blog
+          </Link>
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="md">
-        Navbar
-        {Array(15)
-          .fill(0)
-          .map((_, index) => (
-            <Skeleton key={index} h={28} mt="sm" animate={false}>
-              Test
-            </Skeleton>
-          ))}
+        <NavBar toggle={toggle} />
       </AppShell.Navbar>
-      <AppShell.Main>{children}</AppShell.Main>
-      <AppShell.Aside p="md">Wtf where are these???</AppShell.Aside>
-      <AppShell.Footer p="md">Why do I not see a footer?</AppShell.Footer>
+      <AppShell.Main className="">{children}</AppShell.Main>
+      {/*<AppShell.Footer p="md">Why do I not see a footer?</AppShell.Footer>*/}
     </AppShell>
   );
 }

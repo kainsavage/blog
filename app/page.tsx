@@ -1,8 +1,11 @@
-import Markdown from '@/components/Markdown';
 import db from '@/helpers/db';
+import BlogPost from '@/components/BlostPost';
 
+/**
+ * For now, the homepage is just the most recent blog post.
+ */
 export default async function Home() {
-  const posts = await db.getPosts();
+  const post = await db.getMostRecentPost();
 
-  return <Markdown markdown={posts[0].body} />;
+  return <BlogPost post={post} />;
 }
