@@ -1,9 +1,10 @@
 'use client';
 
-import { AppShell, Burger, Group } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { AppShell } from '@mantine/core';
 import { ReactNode } from 'react';
 import NavBar from '@/components/Navbar';
+import { useDisclosure } from '@mantine/hooks';
+import { Burger, Group } from '@mantine/core';
 import Link from 'next/link';
 
 export default function TeamclerksAppShell({
@@ -12,7 +13,6 @@ export default function TeamclerksAppShell({
   children: ReactNode;
 }) {
   const [opened, { toggle }] = useDisclosure();
-
   return (
     <AppShell
       header={{ height: { base: 60, md: 70, lg: 80 } }}

@@ -2,6 +2,8 @@ import postgres from 'postgres';
 import dotenv from 'dotenv';
 import { parse } from 'pg-connection-string';
 import slugs from '@/helpers/slugs';
+import bcrypt from 'bcrypt';
+import { User as AuthUser } from 'next-auth';
 
 dotenv.config({ path: '.env.local' });
 const options = parse(process.env.DATABASE_URL || '');
@@ -65,9 +67,46 @@ async function getRecentPosts(): Promise<Post[]> {
   return sql`SELECT * from posts ORDER BY created_at DESC LIMIT 10`;
 }
 
+export type User = {
+  id: number;
+  username: string;
+  password: string;
+  created_at: Date;
+  updated_at: Date;
+};
+
+/**
+ * Checks that a user exists - does not return the user.
+ */
+async function getUser(
+  username: string,
+  password: string,
+): Promise<AuthUser | undefined> {
+  if (!sql) return undefined;
+
+  const rows: User[] =
+    await sql`SELECT * from users WHERE username = ${username}`;
+
+  if (!rows || rows.length < 1) return undefined;
+
+  try {
+    const saltedPasswordToCheck = await bcrypt.hash(password, 10);
+    if (!(await bcrypt.compare(password, saltedPasswordToCheck)))
+      throw new Error();
+  } catch (_) {
+    throw new Error('Invalid username or password.');
+  }
+
+  return {
+    id: rows[0].id.toString(),
+    name: rows[0].username,
+  };
+}
+
 export default {
   getAllPosts,
   getMostRecentPost,
   getPostBySlug,
   getRecentPosts,
+  getUser,
 };

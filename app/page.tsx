@@ -1,5 +1,5 @@
 import db from '@/helpers/db';
-import BlogPost from '@/components/BlostPost';
+import BlogPost from '@/components/BlogPost';
 
 /**
  * For now, the homepage is just the most recent blog post.

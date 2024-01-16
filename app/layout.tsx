@@ -7,6 +7,8 @@ import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import { theme } from '@/theme';
 import { ReactNode } from 'react';
 import AppShell from '@/components/AppShell';
+import { getServerSession } from 'next-auth';
+import SessionProvider from '@/components/SessionProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,6 +22,8 @@ export default async function RootLayout({
 }: {
   children: ReactNode;
 }) {
+  const session = await getServerSession();
+
   return (
     <html lang="en">
       <head>
@@ -32,9 +36,11 @@ export default async function RootLayout({
         <title>Teamclerks Blog</title>
       </head>
       <body className={inter.className}>
-        <MantineProvider theme={theme}>
-          <AppShell>{children}</AppShell>
-        </MantineProvider>
+        <SessionProvider session={session}>
+          <MantineProvider theme={theme}>
+            <AppShell>{children}</AppShell>
+          </MantineProvider>
+        </SessionProvider>
       </body>
     </html>
   );
