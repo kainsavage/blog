@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import db from '@/helpers/db';
-import EditPost from '@/app/post/edit/EditPost';
+import EditPost from '@/components/EditPost';
 
 export default async function EditPostPage({
   searchParams,
