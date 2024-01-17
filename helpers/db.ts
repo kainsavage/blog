@@ -51,6 +51,16 @@ async function getMostRecentPost(): Promise<Post> {
 }
 
 /**
+ * Get a post by its id.
+ */
+async function getPost(id: number): Promise<Post | undefined> {
+  if (!sql) return undefined;
+
+  const post: Post[] = await sql`SELECT * from posts where id = ${id}`;
+  return post ? post[0] : undefined;
+}
+
+/**
  * Get a post by its slug. Converts the slug to a title and then queries the database for the post.
  */
 async function getPostBySlug(slug: string): Promise<Post | undefined> {
@@ -106,6 +116,7 @@ async function getUser(
 export default {
   getAllPosts,
   getMostRecentPost,
+  getPost,
   getPostBySlug,
   getRecentPosts,
   getUser,

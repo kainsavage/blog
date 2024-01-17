@@ -1,22 +1,14 @@
 import { Post } from '@/helpers/db';
 import Markdown from '@/components/Markdown';
-import slugs from '@/helpers/slugs';
 import Link from 'next/link';
+import { getServerSession } from 'next-auth';
 
-export default function BlogPost({
-  post,
-  canEdit,
-}: {
-  post?: Post;
-  canEdit?: boolean;
-}) {
+export default async function BlogPost({ post }: { post?: Post }) {
   if (!post) {
     return <>Blog Post not found!</>;
   }
-
-  const slug = slugs.slugify(post.title);
-  const created = new Date(post.created_at).toLocaleDateString();
-  const updated = new Date(post.updated_at).toLocaleDateString();
+  const session = await getServerSession();
+  const canEdit = !!session && !!session.user;
 
   return (
     <>
@@ -25,17 +17,24 @@ export default function BlogPost({
       </h1>
       {canEdit && (
         <div className="p-2">
-          <Link href={`/post/${slug}/edit`}>Edit Post</Link>
+          <Link href={`/post/edit?id=${post.id}`}>Edit Post</Link>
         </div>
       )}
       <div className="p-2 italic text-sm">
-        {post.updated_at ? (
-          <time dateTime={updated}>Updated {updated}</time>
-        ) : (
-          <time dateTime={created}>Written {created}</time>
-        )}
+        <PostedDate post={post} />
       </div>
       <Markdown className="p-2" markdown={post.body} />
     </>
   );
+}
+
+function PostedDate({ post }: { post: Post }) {
+  const updated = new Date(post.updated_at).toLocaleDateString();
+  const created = new Date(post.created_at).toLocaleDateString();
+
+  if (post.updated_at) {
+    return <time dateTime={updated}>Updated {updated}</time>;
+  }
+
+  return <time dateTime={created}>Written {created}</time>;
 }
