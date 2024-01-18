@@ -32,7 +32,7 @@ export default function TeamclerksAppShell({
       <AppShell.Header>
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Link href="/" className="text-3xl">
+          <Link href="/" className="text-3xl text-black no-underline">
             Teamclerks Blog
           </Link>
         </Group>

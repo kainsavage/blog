@@ -26,7 +26,7 @@ export default function BlogPost({
         <PostedDate post={post} />
       </div>
       {hydratedHtml ? (
-        <PostBody html={hydratedHtml} className="" />
+        <PostBody html={hydratedHtml} />
       ) : (
         <Markdown markdown={post.body} />
       )}
@@ -35,7 +35,9 @@ export default function BlogPost({
 }
 
 function PostedDate({ post }: { post: Post }) {
-  const updated = new Date(post.updated_at).toISOString().substring(0, 10);
+  const updated = post.updated_at
+    ? new Date(post.updated_at).toISOString().substring(0, 10)
+    : '';
   const created = new Date(post.created_at).toISOString().substring(0, 10);
 
   if (post.updated_at) {

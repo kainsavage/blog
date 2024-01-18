@@ -1,16 +1,11 @@
-import { HTMLAttributes } from 'react';
+'use client';
 
-export default function PostBody({
-  html,
-  className,
-}: {
-  html: string;
-  className?: HTMLAttributes<HTMLDivElement>['className'];
-}) {
+import styles from './PostBody.module.css';
+
+export default function PostBody({ html }: { html: string }) {
   return (
-    <div
-      className={className || 'm-2'}
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+    <div className={styles.postBody}>
+      <div dangerouslySetInnerHTML={{ __html: html }} />
+    </div>
   );
 }

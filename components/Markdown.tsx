@@ -1,19 +1,13 @@
 'use client';
 
-import { HTMLAttributes, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { md2html } from '@/helpers/markdown';
 import PostBody from '@/components/PostBody';
 
 /**
  * Renders markdown as HTML.
  */
-export default function Markdown({
-  markdown,
-  className,
-}: {
-  markdown: string;
-  className?: HTMLAttributes<HTMLDivElement>['className'];
-}) {
+export default function Markdown({ markdown }: { markdown: string }) {
   const [html, setHtml] = useState<string | undefined>(undefined);
 
   // Process markdown into HTML.
@@ -25,5 +19,5 @@ export default function Markdown({
     void getHtml();
   }, [markdown]);
 
-  return <PostBody className={className || ''} html={html!} />;
+  return <PostBody html={html!} />;
 }

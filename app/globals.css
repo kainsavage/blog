@@ -11,3 +11,8 @@
 body {
   display: flex;
 }
+
+a {
+  color: #0070f3;
+  text-decoration:  underline;
+}
