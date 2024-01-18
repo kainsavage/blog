@@ -7,6 +7,7 @@ import PostBody from '@/components/PostBody';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import slugs from '@/helpers/slugs';
+import { Popover, Text } from '@mantine/core';
 
 export default function BlogPost({
   post,
@@ -24,8 +25,21 @@ export default function BlogPost({
         <Link
           href={`/post/${slugs.slugify(post.title)}`}
           className="ml-3 text-black hover:text-blue-500 cursor-pointer"
+          onClick={(e) => {
+            e.preventDefault();
+            void navigator.clipboard.writeText(
+              `${window.location.origin}/post/${slugs.slugify(post.title)}`,
+            );
+          }}
         >
-          <FontAwesomeIcon icon={faLink} />
+          <Popover width={200} position="bottom" withArrow shadow="md">
+            <Popover.Target>
+              <FontAwesomeIcon icon={faLink} />
+            </Popover.Target>
+            <Popover.Dropdown>
+              <Text size="xs">Copied to clipboard!</Text>
+            </Popover.Dropdown>
+          </Popover>
         </Link>
         {canEdit && (
           <Link
