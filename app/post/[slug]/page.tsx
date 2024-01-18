@@ -1,6 +1,7 @@
 import db from '@/helpers/db';
 import BlogPost from '@/components/BlogPost';
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
 export async function generateMetadata({
   params,
@@ -16,6 +17,8 @@ export async function generateMetadata({
 
 export default async function Post({ params }: { params: { slug: string } }) {
   const post = await db.getPostBySlug(params.slug);
+  // TODO - not the way to do this.
+  if (!post) redirect('/');
 
   return <BlogPost post={post} />;
 }

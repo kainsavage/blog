@@ -1,14 +1,12 @@
 import { Post } from '@/helpers/db';
-import Markdown from '@/components/Markdown';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
+import { md2html } from '@/helpers/markdown';
 
-export default async function BlogPost({ post }: { post?: Post }) {
-  if (!post) {
-    return <>Blog Post not found!</>;
-  }
+export default async function BlogPost({ post }: { post: Post }) {
   const session = await getServerSession();
   const canEdit = !!session && !!session.user;
+  const renderedHtml = await md2html(post.body);
 
   return (
     <>
@@ -23,7 +21,10 @@ export default async function BlogPost({ post }: { post?: Post }) {
       <div className="p-2 italic text-sm">
         <PostedDate post={post} />
       </div>
-      <Markdown className="p-2" markdown={post.body} />
+      <div
+        className="p-2"
+        dangerouslySetInnerHTML={{ __html: renderedHtml }}
+      ></div>
     </>
   );
 }

@@ -27,7 +27,7 @@ export default function TeamclerksAppShell({
         breakpoint: 'md',
         collapsed: { desktop: false, mobile: true },
       }}
-      className="min-w-full md:min-w-0"
+      className="min-w-full"
     >
       <AppShell.Header>
         <Group h="100%" px="md">
@@ -40,7 +40,7 @@ export default function TeamclerksAppShell({
       <AppShell.Navbar p="md" className="shadow-2xl md:shadow-none !p-0">
         <NavBar toggle={toggle} />
       </AppShell.Navbar>
-      <AppShell.Main className="">{children}</AppShell.Main>
+      <AppShell.Main className="flex">{children}</AppShell.Main>
       {/*<AppShell.Footer p="md">Why do I not see a footer?</AppShell.Footer>*/}
     </AppShell>
   );
