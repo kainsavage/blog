@@ -34,13 +34,10 @@ export default function EditPost({ post }: { post?: Post }) {
   }
 
   return (
-    <div className="flex-grow">
+    <>
       <h1>Edit Post</h1>
       <div className="grid grid-cols-2 h-full">
-        <form
-          className="flex-col flex-grow p-2 h-full"
-          onSubmit={form.onSubmit(savePost)}
-        >
+        <form className="p-2" onSubmit={form.onSubmit(savePost)}>
           <TextInput label="Title" mt="sm" {...form.getInputProps('title')} />
           <Textarea
             label="Body"
@@ -54,12 +51,12 @@ export default function EditPost({ post }: { post?: Post }) {
           </Button>
         </form>
         <div
-          className="flew-col p-2"
+          className="p-2"
           dangerouslySetInnerHTML={{
             __html: preview,
           }}
         ></div>
       </div>
-    </div>
+    </>
   );
 }
