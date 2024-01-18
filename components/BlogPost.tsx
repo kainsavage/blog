@@ -9,7 +9,7 @@ export default async function BlogPost({ post }: { post: Post }) {
   const renderedHtml = await md2html(post.body);
 
   return (
-    <>
+    <div className="flex-col">
       <h1 className="text-xl md:text-3xl text-center py-4 px-2">
         {post.title}
       </h1>
@@ -25,7 +25,7 @@ export default async function BlogPost({ post }: { post: Post }) {
         className="p-2"
         dangerouslySetInnerHTML={{ __html: renderedHtml }}
       ></div>
-    </>
+    </div>
   );
 }
 
