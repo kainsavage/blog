@@ -18,7 +18,7 @@ export default function BlogPost({
   hydratedHtml?: string;
 }) {
   return (
-    <div className="flex-col">
+    <div className="flex-col flex-grow max-w-full">
       <div className="flex-row text-center p-4">
         <h1 className="text-xl md:text-4xl py-4 px-2 inline">{post.title}</h1>
         <Link
