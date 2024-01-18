@@ -1,7 +1,12 @@
+'use client';
+
 import { Post } from '@/helpers/db';
 import Link from 'next/link';
 import Markdown from '@/components/Markdown';
 import PostBody from '@/components/PostBody';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLink, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import slugs from '@/helpers/slugs';
 
 export default function BlogPost({
   post,
@@ -14,14 +19,23 @@ export default function BlogPost({
 }) {
   return (
     <div className="flex-col">
-      <h1 className="text-xl md:text-3xl text-center py-4 px-2">
-        {post.title}
-      </h1>
-      {canEdit && (
-        <div className="p-2">
-          <Link href={`/post/edit?id=${post.id}`}>Edit Post</Link>
-        </div>
-      )}
+      <div className="flex-row text-center p-4">
+        <h1 className="text-xl md:text-4xl py-4 px-2 inline">{post.title}</h1>
+        <Link
+          href={`/post/${slugs.slugify(post.title)}`}
+          className="ml-3 text-black hover:text-blue-500 cursor-pointer"
+        >
+          <FontAwesomeIcon icon={faLink} />
+        </Link>
+        {canEdit && (
+          <Link
+            href={`/post/edit?id=${post.id}`}
+            className="ml-3 text-black hover:text-blue-500 cursor-pointer"
+          >
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </Link>
+        )}
+      </div>
       <div className="p-2 italic text-sm">
         <PostedDate post={post} />
       </div>
