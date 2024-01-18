@@ -18,7 +18,7 @@ export default function EditPost({ post }: { post?: Post }) {
       body: post?.body,
     },
   });
-  const debounced = useDebounce(form.values.body, 500);
+  const debounced = useDebounce(form.values.body, 1000);
   const [preview, setPreview] = useState('');
 
   useEffect(() => {
@@ -48,7 +48,6 @@ export default function EditPost({ post }: { post?: Post }) {
             {...form.getInputProps('body')}
             className="flex flex-col"
             autosize
-            maxRows={30}
           />
           <Button fullWidth mt="xl">
             Save
