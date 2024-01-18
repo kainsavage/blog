@@ -2,6 +2,7 @@
 
 import { HTMLAttributes, useEffect, useState } from 'react';
 import { md2html } from '@/helpers/markdown';
+import PostBody from '@/components/PostBody';
 
 /**
  * Renders markdown as HTML.
@@ -24,10 +25,5 @@ export default function Markdown({
     void getHtml();
   }, [markdown]);
 
-  return (
-    <div
-      className={className || ''}
-      dangerouslySetInnerHTML={{ __html: html! }}
-    />
-  );
+  return <PostBody className={className || ''} html={html!} />;
 }

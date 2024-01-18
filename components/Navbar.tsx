@@ -15,8 +15,8 @@ export default function NavBar({ toggle }: { toggle: () => void }) {
   }, []);
 
   return (
-    <div className="bg-gray-100 md:bg-white flex flex-grow flex-col">
-      <h3>Recent Posts</h3>
+    <div className="bg-gray-100 md:bg-white flex flex-grow flex-col p-3">
+      <h3 className="text-xl py-4">Recent Posts</h3>
       <ul>
         {recentPosts.map((post) => (
           <li

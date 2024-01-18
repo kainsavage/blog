@@ -1,13 +1,17 @@
 import { Post } from '@/helpers/db';
 import Link from 'next/link';
-import { getServerSession } from 'next-auth';
-import { md2html } from '@/helpers/markdown';
+import Markdown from '@/components/Markdown';
+import PostBody from '@/components/PostBody';
 
-export default async function BlogPost({ post }: { post: Post }) {
-  const session = await getServerSession();
-  const canEdit = !!session && !!session.user;
-  const renderedHtml = await md2html(post.body);
-
+export default function BlogPost({
+  post,
+  canEdit = false,
+  hydratedHtml,
+}: {
+  post: Post;
+  canEdit?: boolean;
+  hydratedHtml?: string;
+}) {
   return (
     <div className="flex-col">
       <h1 className="text-xl md:text-3xl text-center py-4 px-2">
@@ -21,10 +25,11 @@ export default async function BlogPost({ post }: { post: Post }) {
       <div className="p-2 italic text-sm">
         <PostedDate post={post} />
       </div>
-      <div
-        className="p-2"
-        dangerouslySetInnerHTML={{ __html: renderedHtml }}
-      ></div>
+      {hydratedHtml ? (
+        <PostBody html={hydratedHtml} className="" />
+      ) : (
+        <Markdown markdown={post.body} />
+      )}
     </div>
   );
 }
