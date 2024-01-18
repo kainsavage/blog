@@ -19,6 +19,8 @@ if (!process.env.NEXTJS_BUILD) {
     database: options.database!,
     username: options.user!,
     password: options.password!,
+    idle_timeout: 10,
+    max_lifetime: 30,
   });
 }
 

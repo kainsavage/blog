@@ -33,4 +33,4 @@ export const config = {
   ],
 } satisfies NextAuthOptions;
 
-export const { handlers, auth } = NextAuth(config);
+export default NextAuth(config);

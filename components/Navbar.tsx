@@ -15,7 +15,7 @@ export default function NavBar({ toggle }: { toggle: () => void }) {
   }, []);
 
   return (
-    <>
+    <div className="bg-gray-100 md:bg-white flex flex-grow flex-col">
       <h3>Recent Posts</h3>
       <ul>
         {recentPosts.map((post) => (
@@ -41,6 +41,6 @@ export default function NavBar({ toggle }: { toggle: () => void }) {
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 }

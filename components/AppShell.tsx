@@ -37,7 +37,7 @@ export default function TeamclerksAppShell({
           </Link>
         </Group>
       </AppShell.Header>
-      <AppShell.Navbar p="md">
+      <AppShell.Navbar p="md" className="shadow-2xl md:shadow-none !p-0">
         <NavBar toggle={toggle} />
       </AppShell.Navbar>
       <AppShell.Main className="">{children}</AppShell.Main>

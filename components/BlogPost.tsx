@@ -29,8 +29,8 @@ export default async function BlogPost({ post }: { post?: Post }) {
 }
 
 function PostedDate({ post }: { post: Post }) {
-  const updated = new Date(post.updated_at).toLocaleDateString();
-  const created = new Date(post.created_at).toLocaleDateString();
+  const updated = new Date(post.updated_at).toISOString().substring(0, 10);
+  const created = new Date(post.created_at).toISOString().substring(0, 10);
 
   if (post.updated_at) {
     return <time dateTime={updated}>Updated {updated}</time>;

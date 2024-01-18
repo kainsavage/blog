@@ -33,7 +33,6 @@ export default async function RootLayout({
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
         <script type="text/javascript" src="/scripts/prism.js" async />
-        <title>Teamclerks Blog</title>
       </head>
       <body className={inter.className}>
         <SessionProvider session={session}>

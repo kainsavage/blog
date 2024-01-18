@@ -2,6 +2,11 @@ import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import db from '@/helpers/db';
 import EditPost from '@/components/EditPost';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Edit Blog Post | Teamclerks',
+};
 
 export default async function EditPostPage({
   searchParams,
