@@ -15,8 +15,8 @@ import BlogPost from '@/components/BlogPost';
 export default function EditPost({ post }: { post?: Post }) {
   const form = useForm({
     initialValues: {
-      title: post?.title,
-      body: post?.body,
+      title: post ? post.title : '',
+      body: post ? post.body : '',
     },
   });
   if (!post) {
@@ -32,7 +32,8 @@ export default function EditPost({ post }: { post?: Post }) {
 
   useEffect(() => {
     async function getPreview() {
-      setPreview(await md2html(debounced!));
+      if (!debounced) return;
+      setPreview(await md2html(debounced));
     }
     void getPreview();
   }, [debounced]);
@@ -43,7 +44,7 @@ export default function EditPost({ post }: { post?: Post }) {
   }
 
   return (
-    <div>
+    <div className="flex-grow">
       <h1 className="text-xl md:text-3xl text-center py-4 px-2">Edit Post</h1>
       <div className="grid grid-cols-2 h-full">
         <form className="m-3" onSubmit={form.onSubmit(savePost)}>

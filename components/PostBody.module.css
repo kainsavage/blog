@@ -1,6 +1,35 @@
 .postBody {
   margin: 0.75rem;
 
+  & h1, & h2, & h3, & h4, & h5, & h6 {
+    font-weight: 700;
+    padding: 1rem 0.5rem 1rem 0;
+  }
+  & h1 {
+    font-size: 2.5rem;
+    line-height: 2.5rem;
+  }
+  & h2 {
+    font-size: 2.25rem;
+    line-height: 2.25rem;
+  }
+  & h3 {
+    font-size: 2rem;
+    line-height: 2rem;
+  }
+  & h4 {
+    font-size: 1.75rem;
+    line-height: 1.75rem;
+  }
+  & h5 {
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+  }
+  & h6 {
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+  }
+
   & p {
     margin: 0 0 0.5rem 0;
   }
@@ -9,7 +38,7 @@
     max-width: 100%;
     background: #f9f9f9;
     border-left: 10px solid #ccc;
-    margin: 1.5em 10px;
+    margin: 1.5em 2rem;
     padding: 0.5em 10px;
     quotes: "\201C""\201D""\2018""\2019";
   }
@@ -23,5 +52,38 @@
   }
   & blockquote p {
     display: inline;
+  }
+
+  & ol {
+    list-style: decimal inside;
+    padding-bottom: 1rem;
+  }
+
+  & ul {
+    list-style: disc inside;
+    padding-bottom: 1rem;
+  }
+
+  & hr {
+    border: 0;
+    height: 1px;
+    background: #2d2d2d;
+    margin: 1rem 0;
+  }
+
+  & code {
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-size: 1em;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    tab-size: 2;
+    hyphens: none;
+    background: #2d2d2d;
+    color: #ccc;
+    padding: 0.15rem 0.25rem;
   }
 }
