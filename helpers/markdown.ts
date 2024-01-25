@@ -3,21 +3,28 @@ import remarkRehype from 'remark-rehype';
 import rehypeRaw from 'rehype-raw';
 import { unified } from 'unified';
 import rehypeStringify from 'rehype-stringify';
+import remarkGfm from 'remark-gfm';
+import emoji from 'remark-emoji';
 import * as cheerio from 'cheerio';
-// import Prism from 'prismjs';
-// import loadLanguages from 'prismjs/components/index';
 import Prism from '@/components/prism';
 import { decode } from 'html-entities';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import remarkHeadingId from 'remark-heading-id';
 
 /**
  * Converts markdown to html using remark and rehype, and converts code blocks to syntax highlighted
  * code blocks using Prism. This is suitable for calling during SSR.
+ *
+ * @ref: https://github.com/remarkjs/remark/blob/main/doc/plugins.md
  */
 async function md2html(input: string) {
-  // loadLanguages(['typescript']);
   const processedContent = (
     await unified()
       .use(remarkParse)
+      .use(remarkHeadingId, { defaults: true })
+      .use(remarkGfm)
+      .use(emoji)
       .use(remarkRehype, { allowDangerousHtml: true })
       .use(rehypeRaw)
       .use(rehypeStringify)
