@@ -29,7 +29,7 @@ const teal: MantineColorsTuple = [
 ];
 
 const grey: MantineColorsTuple = [
-  '#fbf3f5',
+  '#f5f5f5',
   '#e7e7e7',
   '#cdcdcd',
   '#b2b2b2',
@@ -38,7 +38,7 @@ const grey: MantineColorsTuple = [
   '#848484',
   '#717171',
   '#656565',
-  '#5c5557',
+  '#575757',
 ];
 
 export const theme = createTheme({
