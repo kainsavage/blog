@@ -86,4 +86,13 @@
     color: #ccc;
     padding: 0.15rem 0.25rem;
   }
+
+  & p img {
+    float: left;
+    padding-right: 0.5rem;
+  }
+  & p img[src$='#right'] {
+    float: right;
+    padding-left: 0.5rem;
+  }
 }

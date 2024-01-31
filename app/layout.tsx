@@ -1,3 +1,4 @@
+import '@mantine/core/styles/global.css';
 import '@mantine/core/styles.css';
 import './globals.css';
 import './prism.css';
@@ -8,11 +9,12 @@ import { theme } from '@/theme';
 import { ReactNode } from 'react';
 import AppShell from '@/components/AppShell';
 import { getServerSession } from 'next-auth';
-import SessionProvider from '@/components/SessionProvider';
+import SessionProvider from '@/providers/SessionProvider';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-config.autoAddCss = false;
+import ReactQueryProvider from '@/providers/ReactQueryProvider';
 
+config.autoAddCss = false;
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -40,7 +42,9 @@ export default async function RootLayout({
       <body className={inter.className}>
         <SessionProvider session={session}>
           <MantineProvider theme={theme}>
-            <AppShell>{children}</AppShell>
+            <ReactQueryProvider>
+              <AppShell>{children}</AppShell>
+            </ReactQueryProvider>
           </MantineProvider>
         </SessionProvider>
       </body>
