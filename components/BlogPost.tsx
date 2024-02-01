@@ -19,7 +19,7 @@ export default function BlogPost({
   hydratedHtml?: string;
 }) {
   return (
-    <div className="flex-col flex-grow max-w-full">
+    <div className="flex-col flex-grow">
       <div className="flex-row text-center p-4">
         <Link
           href={`/post/${slugs.slugify(post.title)}`}
@@ -43,10 +43,7 @@ export default function BlogPost({
           </Popover>
         </Link>
         {canEdit && (
-          <Link
-            href={`/post/edit?id=${post.id}`}
-            className="ml-3 hover:text-blue-500 cursor-pointer"
-          >
+          <Link href={`/post/edit?id=${post.id}`} className="ml-3">
             <FontAwesomeIcon icon={faPenToSquare} />
           </Link>
         )}

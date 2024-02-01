@@ -13,12 +13,12 @@ body {
 }
 
 a {
-  color: #fdd7c5;
+  color: #e58a15;
   text-decoration:  underline;
   transition-timing-function: cubic-bezier(0.4, 0.2, 0.2, 1);
   transition-duration: 300ms;
 
   &:hover {
-    color: #f25757;
+    color: #ffab54;
   }
 }

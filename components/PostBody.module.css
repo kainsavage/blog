@@ -36,14 +36,14 @@
 
   & blockquote {
     max-width: 100%;
-    background: #f9f9f9;
-    border-left: 10px solid #ccc;
+    background: #2d2d2d;
+    border-left: 10px solid var(--mantine-color-text);
     margin: 1.5em 2rem;
     padding: 0.5em 10px;
     quotes: "\201C""\201D""\2018""\2019";
   }
   & blockquote:before {
-    color: #ccc;
+    color: var(--mantine-color-text);
     content: open-quote;
     font-size: 4em;
     line-height: 0.1em;
@@ -71,6 +71,9 @@
     margin: 1rem 0;
   }
 
+  & pre {
+    max-width: calc(100vw - 1rem);
+  }
   & code {
     font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
     font-size: 1em;
