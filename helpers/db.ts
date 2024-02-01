@@ -1,28 +1,29 @@
-import postgres from 'postgres';
-import dotenv from 'dotenv';
-import { parse } from 'pg-connection-string';
+// import postgres from 'postgres';
+// import dotenv from 'dotenv';
+// import { parse } from 'pg-connection-string';
 import slugs from '@/helpers/slugs';
 import bcrypt from 'bcrypt';
 import { User as AuthUser } from 'next-auth';
+import { sql } from '@vercel/postgres';
 
-dotenv.config({ path: '.env.local' });
-const options = parse(process.env.DATABASE_URL || '');
-
-let sql: postgres.Sql<Record<string, unknown>>;
-// We need to check that we are not in the build stage of the Dockerfile. If so, Next will attempt
-// to run this file and will fail because it cannot connect to the database. This is because the
-// database is not running yet. We only want to run this file when the container is running.
-if (!process.env.NEXTJS_BUILD) {
-  sql = postgres({
-    host: options.host!,
-    port: Number.parseInt(options.port!),
-    database: options.database!,
-    username: options.user!,
-    password: options.password!,
-    idle_timeout: 10,
-    max_lifetime: 30,
-  });
-}
+// dotenv.config({ path: '.env.local' });
+// const options = parse(process.env.DATABASE_URL || '');
+//
+// let sql: postgres.Sql<Record<string, unknown>>;
+// // We need to check that we are not in the build stage of the Dockerfile. If so, Next will attempt
+// // to run this file and will fail because it cannot connect to the database. This is because the
+// // database is not running yet. We only want to run this file when the container is running.
+// if (!process.env.NEXTJS_BUILD) {
+//   sql = postgres({
+//     host: options.host!,
+//     port: Number.parseInt(options.port!),
+//     database: options.database!,
+//     username: options.user!,
+//     password: options.password!,
+//     idle_timeout: 10,
+//     max_lifetime: 30,
+//   });
+// }
 
 export type Post = {
   id: number;
@@ -38,7 +39,8 @@ export type Post = {
 async function getAllPosts(): Promise<Post[]> {
   if (!sql) return [];
 
-  return sql`SELECT * from posts`;
+  const res = await sql`SELECT * from posts`;
+  return res.rows as Post[];
 }
 
 /**
@@ -47,9 +49,8 @@ async function getAllPosts(): Promise<Post[]> {
 async function getMostRecentPost(): Promise<Post> {
   if (!sql) return {} as Post;
 
-  const row: Post[] =
-    await sql`SELECT * from posts ORDER BY created_at DESC LIMIT 1`;
-  return row[0];
+  const res = await sql`SELECT * from posts ORDER BY created_at DESC LIMIT 1`;
+  return res.rows[0] as Post;
 }
 
 /**
@@ -58,8 +59,8 @@ async function getMostRecentPost(): Promise<Post> {
 async function getPost(id: number): Promise<Post | undefined> {
   if (!sql) return undefined;
 
-  const post: Post[] = await sql`SELECT * from posts where id = ${id}`;
-  return post ? post[0] : undefined;
+  const res = await sql`SELECT * from posts where id = ${id}`;
+  return res.rows ? (res.rows[0] as Post) : undefined;
 }
 
 /**
@@ -67,16 +68,16 @@ async function getPost(id: number): Promise<Post | undefined> {
  */
 async function getPostBySlug(slug: string): Promise<Post | undefined> {
   const title = slugs.unslugify(slug).toLowerCase();
-  const post: Post[] =
-    await sql`SELECT * from posts where LOWER(title) = ${title}`;
+  const res = await sql`SELECT * from posts where LOWER(title) = ${title}`;
 
-  return post ? post[0] : undefined;
+  return res.rows ? (res.rows[0] as Post) : undefined;
 }
 
 async function getRecentPosts(): Promise<Post[]> {
   if (!sql) return [];
 
-  return sql`SELECT * from posts ORDER BY created_at DESC LIMIT 10`;
+  const res = await sql`SELECT * from posts ORDER BY created_at DESC LIMIT 10`;
+  return res.rows as Post[];
 }
 
 export type User = {
@@ -96,10 +97,9 @@ async function getUser(
 ): Promise<AuthUser | undefined> {
   if (!sql) return undefined;
 
-  const rows: User[] =
-    await sql`SELECT * from users WHERE username = ${username}`;
+  const res = await sql`SELECT * from users WHERE username = ${username}`;
 
-  if (!rows || rows.length < 1) return undefined;
+  if (!res.rows || res.rows.length < 1) return undefined;
 
   try {
     const saltedPasswordToCheck = await bcrypt.hash(password, 10);
@@ -110,8 +110,8 @@ async function getUser(
   }
 
   return {
-    id: rows[0].id.toString(),
-    name: rows[0].username,
+    id: res.rows[0].id.toString(),
+    name: res.rows[0].username,
   };
 }
 
