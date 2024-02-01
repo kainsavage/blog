@@ -28,11 +28,12 @@ export default function TeamclerksAppShell({
         collapsed: { desktop: false, mobile: true },
       }}
       className="min-w-full"
+      withBorder={false}
     >
       <AppShell.Header>
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Link href="/" className="text-3xl text-black no-underline">
+          <Link href="/" className="text-3xl no-underline">
             Teamclerks Blog
           </Link>
         </Group>

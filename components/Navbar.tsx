@@ -8,7 +8,7 @@ import { fq } from '@/helpers/fetch';
 
 export default function NavBar({ toggle }: { toggle: () => void }) {
   return (
-    <div className="bg-gray-100 md:bg-white flex flex-grow flex-col p-3">
+    <div className="flex flex-grow flex-col p-3">
       <h3 className="text-xl py-4">Recent Posts</h3>
       <ul className="flex flex-col gap-1">
         <Suspense fallback={<LoadingNavItems />}>

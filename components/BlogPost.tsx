@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Markdown from '@/components/Markdown';
 import PostBody from '@/components/PostBody';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLink, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import slugs from '@/helpers/slugs';
 import { Popover, Text } from '@mantine/core';
 
@@ -21,10 +21,9 @@ export default function BlogPost({
   return (
     <div className="flex-col flex-grow max-w-full">
       <div className="flex-row text-center p-4">
-        <h1 className="text-xl md:text-4xl py-4 px-2 inline">{post.title}</h1>
         <Link
           href={`/post/${slugs.slugify(post.title)}`}
-          className="ml-3 text-black hover:text-blue-500 cursor-pointer"
+          className="ml-3 no-underline"
           onClick={(e) => {
             e.preventDefault();
             void navigator.clipboard.writeText(
@@ -34,7 +33,9 @@ export default function BlogPost({
         >
           <Popover width={200} position="bottom" withArrow shadow="md">
             <Popover.Target>
-              <FontAwesomeIcon icon={faLink} />
+              <h1 className="text-xl md:text-4xl py-4 px-2 inline">
+                {post.title}
+              </h1>
             </Popover.Target>
             <Popover.Dropdown>
               <Text size="xs">Copied to clipboard!</Text>
@@ -44,13 +45,13 @@ export default function BlogPost({
         {canEdit && (
           <Link
             href={`/post/edit?id=${post.id}`}
-            className="ml-3 text-black hover:text-blue-500 cursor-pointer"
+            className="ml-3 hover:text-blue-500 cursor-pointer"
           >
             <FontAwesomeIcon icon={faPenToSquare} />
           </Link>
         )}
       </div>
-      <div className="p-2 italic text-sm">
+      <div className="px-2 italic text-sm">
         <PostedDate post={post} />
       </div>
       {hydratedHtml ? (

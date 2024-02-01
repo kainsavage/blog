@@ -3,14 +3,22 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: var(--mantine-color-scheme);
+  color-scheme: dark;
 }
 
 body {
   display: flex;
+  --mantine-color-body: #1E1F22FF;
+  --mantine-color-text: #B0AAA0FF;
 }
 
 a {
-  color: #0070f3;
+  color: #fdd7c5;
   text-decoration:  underline;
+  transition-timing-function: cubic-bezier(0.4, 0.2, 0.2, 1);
+  transition-duration: 300ms;
+
+  &:hover {
+    color: #f25757;
+  }
 }

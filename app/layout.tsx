@@ -41,7 +41,7 @@ export default async function RootLayout({
       </head>
       <body className={inter.className}>
         <SessionProvider session={session}>
-          <MantineProvider theme={theme}>
+          <MantineProvider theme={theme} defaultColorScheme="dark">
             <ReactQueryProvider>
               <AppShell>{children}</AppShell>
             </ReactQueryProvider>
