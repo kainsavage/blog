@@ -13,6 +13,7 @@ import SessionProvider from '@/providers/SessionProvider';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import ReactQueryProvider from '@/providers/ReactQueryProvider';
+import { Analytics } from '@vercel/analytics/dist/react';
 
 config.autoAddCss = false;
 const inter = Inter({ subsets: ['latin'] });
@@ -47,6 +48,7 @@ export default async function RootLayout({
             </ReactQueryProvider>
           </MantineProvider>
         </SessionProvider>
+        <Analytics />
       </body>
     </html>
   );
