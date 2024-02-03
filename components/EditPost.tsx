@@ -2,11 +2,11 @@
 
 import { Post } from '@/helpers/db';
 import { useForm } from '@mantine/form';
-import { Button, Textarea, TextInput } from '@mantine/core';
+import { Button, Switch, Textarea, TextInput } from '@mantine/core';
 import { md2html } from '@/helpers/markdown';
-import { useEffect, useState } from 'react';
-import { useDebounce } from 'usehooks-ts';
+import { useState } from 'react';
 import BlogPost from '@/components/BlogPost';
+import { fq } from '@/helpers/fetch';
 
 /**
  * Technically, this component is create/edit post based on whether you pass an existing post to
@@ -27,44 +27,55 @@ export default function EditPost({ post }: { post?: Post }) {
       created_at: new Date(),
     };
   }
-  const debounced = useDebounce(form.values.body, 1000);
   const [preview, setPreview] = useState('');
+  const [checked, setChecked] = useState(false);
 
-  useEffect(() => {
-    async function getPreview() {
-      if (!debounced) return;
-      setPreview(await md2html(debounced));
-    }
-    void getPreview();
-  }, [debounced]);
+  async function savePost() {
+    if (!post) return; // Impossible.
 
-  function savePost() {
-    // TODO
-    console.log(form.values.title, form.values.body);
+    await fetch(fq`/api/posts/edit`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: post.id,
+        title: form.values.title,
+        body: form.values.body,
+      }),
+    });
+  }
+
+  function togglePreview() {
+    void md2html(form.values.body)
+      .then((html) => setPreview(html))
+      .then(() => setChecked(!checked));
   }
 
   return (
-    <div className="flex-grow">
+    <div>
       <h1 className="text-xl md:text-3xl text-center py-4 px-2">Edit Post</h1>
-      <div className="grid grid-cols-2 h-full">
-        <form className="m-3" onSubmit={form.onSubmit(savePost)}>
+      <Switch checked={checked} onChange={togglePreview} label="Preview" />
+      {!checked ? (
+        <form className="md:w-[1024px]" onSubmit={form.onSubmit(savePost)}>
           <TextInput label="Title" mt="sm" {...form.getInputProps('title')} />
           <Textarea
             label="Body"
             mt="sm"
             {...form.getInputProps('body')}
             className="flex flex-col"
-            autosize
+            rows={40}
           />
-          <Button fullWidth mt="xl">
-            Save
-          </Button>
         </form>
+      ) : (
         <BlogPost
           post={{ ...post, title: form.values.title! }}
           hydratedHtml={preview}
         />
-      </div>
+      )}
+      <Button fullWidth mt="xl" onClick={savePost}>
+        Save
+      </Button>
     </div>
   );
 }

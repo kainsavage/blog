@@ -18,14 +18,16 @@ export default function TeamclerksAppShell({
         className="max-w-[1024px]"
         withBorder={false}
       >
-        <AppShell.Header className="mx-auto px-2 max-w-[1024px] flex flex-row justify-between">
-          <Group h="100%" className="">
-            <Link href="/" className="text-3xl no-underline">
+        <AppShell.Header className="mx-auto max-w-[1024px] flex flex-row justify-between">
+          <Group h="100%">
+            <Link href="/" className="text-3xl no-underline pl-1 md:pr-0">
               Teamclerks Blog
             </Link>
           </Group>
           <Group h="100%">
-            <Link href="/test">Wat</Link>
+            <Link href="/test" className="pr-1 md:pr-0">
+              Wat
+            </Link>
           </Group>
         </AppShell.Header>
         <AppShell.Main>{children}</AppShell.Main>
