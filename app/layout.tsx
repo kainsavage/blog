@@ -1,5 +1,6 @@
 import '@mantine/core/styles/global.css';
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import './globals.css';
 import './prism.css';
 import type { Metadata } from 'next';
@@ -14,6 +15,7 @@ import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import ReactQueryProvider from '@/providers/ReactQueryProvider';
 import { Analytics } from '@vercel/analytics/react';
+import { Notifications } from '@mantine/notifications';
 
 config.autoAddCss = false;
 const inter = Inter({ subsets: ['latin'] });
@@ -42,11 +44,12 @@ export default async function RootLayout({
       </head>
       <body className={inter.className}>
         <SessionProvider session={session}>
-          <MantineProvider theme={theme} defaultColorScheme="dark">
-            <ReactQueryProvider>
+          <ReactQueryProvider>
+            <MantineProvider theme={theme} defaultColorScheme="dark">
+              <Notifications position="top-right" zIndex={1000} />
               <AppShell>{children}</AppShell>
-            </ReactQueryProvider>
-          </MantineProvider>
+            </MantineProvider>
+          </ReactQueryProvider>
         </SessionProvider>
         <Analytics />
       </body>

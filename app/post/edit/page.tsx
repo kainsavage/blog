@@ -16,14 +16,11 @@ export default async function EditPostPage({
   const session = await getServerSession();
   if (!session || !session.user) redirect('/api/auth/signin');
 
-  // This is technically a 404, but I'm the admin and don't care.
-  if (!searchParams) redirect('/');
   const id = searchParams?.id;
-  // Again, dgaf.
-  if (!id) redirect('/');
-  const post = await db.getPost(Number.parseInt(id));
-  // Again, dgaf.
-  if (!post) redirect('/');
+  let post;
+  if (id) {
+    post = await db.getPost(Number.parseInt(id));
+  }
 
   return <EditPost post={post} />;
 }

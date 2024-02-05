@@ -1,29 +1,7 @@
-// import postgres from 'postgres';
-// import dotenv from 'dotenv';
-// import { parse } from 'pg-connection-string';
 import slugs from '@/helpers/slugs';
 import bcrypt from 'bcrypt';
 import { User as AuthUser } from 'next-auth';
 import { sql } from '@vercel/postgres';
-
-// dotenv.config({ path: '.env.local' });
-// const options = parse(process.env.DATABASE_URL || '');
-//
-// let sql: postgres.Sql<Record<string, unknown>>;
-// // We need to check that we are not in the build stage of the Dockerfile. If so, Next will attempt
-// // to run this file and will fail because it cannot connect to the database. This is because the
-// // database is not running yet. We only want to run this file when the container is running.
-// if (!process.env.NEXTJS_BUILD) {
-//   sql = postgres({
-//     host: options.host!,
-//     port: Number.parseInt(options.port!),
-//     database: options.database!,
-//     username: options.user!,
-//     password: options.password!,
-//     idle_timeout: 10,
-//     max_lifetime: 30,
-//   });
-// }
 
 export type Post = {
   id: number;
@@ -57,10 +35,34 @@ async function getMostRecentPost(): Promise<Post> {
  * Get a post by its id.
  */
 async function getPost(id: number): Promise<Post | undefined> {
-  if (!sql) return undefined;
+  if (!sql) return;
 
   const res = await sql`SELECT * from posts where id = ${id}`;
   return res.rows ? (res.rows[0] as Post) : undefined;
+}
+
+/**
+ * Create a new post.
+ */
+async function createPost(title: string, body: string) {
+  if (!sql) return;
+
+  const resp =
+    await sql`INSERT INTO posts (title, body) VALUES (${title}, ${body})`;
+
+  if (resp.rowCount < 1) throw new Error('Failed to create post');
+}
+
+/**
+ * Edit a post by its id.
+ */
+async function editPost(id: number, title: string, body: string) {
+  if (!sql) return;
+
+  const resp =
+    await sql`UPDATE posts SET title = ${title}, body = ${body}, updated_at = NOW() WHERE id = ${id}`;
+
+  if (resp.rowCount < 1) throw new Error('Failed to edit post');
 }
 
 /**
@@ -95,7 +97,7 @@ async function getUser(
   username: string,
   password: string,
 ): Promise<AuthUser | undefined> {
-  if (!sql) return undefined;
+  if (!sql) return;
 
   const res = await sql`SELECT * from users WHERE username = ${username}`;
 
@@ -119,6 +121,8 @@ export default {
   getAllPosts,
   getMostRecentPost,
   getPost,
+  createPost,
+  editPost,
   getPostBySlug,
   getRecentPosts,
   getUser,

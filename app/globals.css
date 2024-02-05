@@ -7,7 +7,6 @@
 }
 
 body {
-  display: flex;
   --mantine-color-body: #1E1F22FF;
   --mantine-color-text: #B0AAA0FF;
 }
