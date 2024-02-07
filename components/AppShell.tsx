@@ -3,7 +3,6 @@
 import { AppShell } from '@mantine/core';
 import { ReactNode } from 'react';
 import { Group } from '@mantine/core';
-import { useSession } from 'next-auth/react';
 import Logo from '@/components/Logo';
 
 export default function TeamclerksAppShell({
@@ -11,7 +10,7 @@ export default function TeamclerksAppShell({
 }: {
   children: ReactNode;
 }) {
-  const session = useSession();
+  // const session = useSession();
   // const authenticated = session.status === 'authenticated';
 
   return (
