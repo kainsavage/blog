@@ -13,7 +13,7 @@ export async function generateMetadata({
   const post = await db.getPostBySlug(params.slug);
 
   return {
-    title: post?.title + ' | Teamclerks' || 'Blog Post Not Found | Teamclerks',
+    title: `${post?.title || 'Blog Post Not Found'} | TeamClerks`,
   };
 }
 

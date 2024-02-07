@@ -84,13 +84,19 @@ export default function EditPost({ post }: { post?: Post }) {
       .then(() => setChecked(!checked));
   }
 
+  // TODO - Change these posts to allow for metadata, hero images, etc.
+
   return (
     <div>
       <h1 className="text-xl md:text-3xl text-center py-4 px-2">Edit Post</h1>
       <Switch checked={checked} onChange={togglePreview} label="Preview" />
       {!checked ? (
         <form className="md:w-[1024px]" onSubmit={form.onSubmit(savePost)}>
-          <TextInput label="Title" mt="sm" {...form.getInputProps('title')} />
+          <TextInput
+            label="Title (slug)"
+            mt="sm"
+            {...form.getInputProps('title')}
+          />
           <Textarea
             label="Body"
             mt="sm"

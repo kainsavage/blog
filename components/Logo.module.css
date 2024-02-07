@@ -1,0 +1,34 @@
+a.logo {
+  color: var(--mantine-color-text);
+
+  & p {
+    font-size: 3rem;
+    line-height: 3rem;
+  }
+
+  & .team {
+    border-color: var(--mantine-color-text);
+    transition-timing-function: cubic-bezier(0.4, 0.2, 0.2, 1);
+    transition-duration: 300ms;
+    font-family: 'Tahoma', sans-serif;
+  }
+
+  &:hover .team {
+    background-color: var(--mantine-color-text);
+    color: var(--mantine-color-body);
+  }
+
+  & .clerks {
+    background-color: var(--mantine-color-text);
+    color: var(--mantine-color-body);
+    transition-timing-function: cubic-bezier(0.4, 0.2, 0.2, 1);
+    transition-duration: 300ms;
+    font-family: 'Trebuchet MS', sans-serif;
+  }
+
+  &:hover .clerks {
+    background-color: var(--mantine-color-body);
+    color: var(--mantine-color-text);
+    border-color: var(--mantine-color-text);
+  }
+}

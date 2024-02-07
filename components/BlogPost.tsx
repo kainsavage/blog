@@ -1,13 +1,11 @@
 'use client';
 
 import { Post } from '@/helpers/db';
-import Link from 'next/link';
 import Markdown from '@/components/Markdown';
 import PostBody from '@/components/PostBody';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-import slugs from '@/helpers/slugs';
 import { Popover, Text } from '@mantine/core';
+import { useRouter } from 'next/navigation';
+import slugs from '@/helpers/slugs';
 
 export default function BlogPost({
   post,
@@ -18,37 +16,37 @@ export default function BlogPost({
   canEdit?: boolean;
   hydratedHtml?: string;
 }) {
+  const router = useRouter();
+
   return (
     <div className="flex-col flex-grow">
-      <div className="flex-row text-center p-4">
-        <Link
-          href={`/post/${slugs.slugify(post.title)}`}
-          className="ml-3 no-underline"
-          onClick={(e) => {
-            e.preventDefault();
-            void navigator.clipboard.writeText(
-              `${window.location.origin}/post/${slugs.slugify(post.title)}`,
-            );
+      <div className="flex-row p-2 foo">
+        <Popover
+          width={200}
+          position="bottom-start"
+          withArrow
+          shadow="md"
+          onOpen={() => {
+            if (canEdit) {
+              void router.push(`/post/edit?id=${post.id}`);
+            } else {
+              void navigator.clipboard.writeText(
+                `${window.location.origin}/post/${slugs.slugify(post.title)}`,
+              );
+            }
           }}
         >
-          <Popover width={200} position="bottom" withArrow shadow="md">
-            <Popover.Target>
-              <h1 className="text-xl md:text-4xl py-4 px-2 inline">
-                {post.title}
-              </h1>
-            </Popover.Target>
-            <Popover.Dropdown>
-              <Text size="xs">Copied to clipboard!</Text>
-            </Popover.Dropdown>
-          </Popover>
-        </Link>
-        {canEdit && (
-          <Link href={`/post/edit?id=${post.id}`} className="ml-3">
-            <FontAwesomeIcon icon={faPenToSquare} />
-          </Link>
-        )}
+          <Popover.Target>
+            <h3 className="text-[2rem] font-extrabold text-left cursor-pointer">
+              {post.title}
+            </h3>
+          </Popover.Target>
+          <Popover.Dropdown>
+            <Text size="xs">Copied to clipboard!</Text>
+          </Popover.Dropdown>
+        </Popover>
       </div>
-      <div className="px-2 italic text-sm">
+      <div className="italic text-sm p-2">
         <PostedDate post={post} />
       </div>
       {hydratedHtml ? (
