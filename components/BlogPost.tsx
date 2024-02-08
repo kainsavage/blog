@@ -6,6 +6,7 @@ import PostBody from '@/components/PostBody';
 import { Popover, Text } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import slugs from '@/helpers/slugs';
+import PostedDate from '@/components/PostedDate';
 
 export default function BlogPost({
   post,
@@ -20,7 +21,7 @@ export default function BlogPost({
 
   return (
     <div className="flex-col flex-grow">
-      <div className="flex-row p-2 foo">
+      <div className="flex-row">
         <Popover
           width={200}
           position="bottom-start"
@@ -46,7 +47,7 @@ export default function BlogPost({
           </Popover.Dropdown>
         </Popover>
       </div>
-      <div className="italic text-sm p-2">
+      <div className="italic text-sm">
         <PostedDate post={post} />
       </div>
       {hydratedHtml ? (
@@ -56,17 +57,4 @@ export default function BlogPost({
       )}
     </div>
   );
-}
-
-function PostedDate({ post }: { post: Post }) {
-  const updated = post.updated_at
-    ? new Date(post.updated_at).toISOString().substring(0, 10)
-    : '';
-  const created = new Date(post.created_at).toISOString().substring(0, 10);
-
-  if (post.updated_at) {
-    return <time dateTime={updated}>Updated {updated}</time>;
-  }
-
-  return <time dateTime={created}>Written {created}</time>;
 }

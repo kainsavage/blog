@@ -4,7 +4,10 @@ import { Text } from '@mantine/core';
 
 export default function Logo() {
   return (
-    <Link href="/" className={`${styles.logo} no-underline flex flex-row`}>
+    <Link
+      href={{ pathname: '/' }}
+      className={`${styles.logo} no-underline flex flex-row`}
+    >
       <Text
         className={`${styles.team} border-2 border-r-0 border-l-0`}
         px={4}

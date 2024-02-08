@@ -7,6 +7,8 @@ export type Post = {
   id: number;
   title: string;
   body: string;
+  synopsis: string;
+  tags: string;
   created_at: Date;
   updated_at?: Date;
 };
@@ -17,7 +19,7 @@ export type Post = {
 async function getAllPosts(): Promise<Post[]> {
   if (!sql) return [];
 
-  const res = await sql`SELECT * from posts`;
+  const res = await sql`SELECT * from posts ORDER BY created_at DESC`;
   return res.rows as Post[];
 }
 
@@ -44,11 +46,16 @@ async function getPost(id: number): Promise<Post | undefined> {
 /**
  * Create a new post.
  */
-async function createPost(title: string, body: string) {
+async function createPost(
+  title: string,
+  body: string,
+  synopsis: string,
+  tags: string,
+) {
   if (!sql) return;
 
   const resp =
-    await sql`INSERT INTO posts (title, body) VALUES (${title}, ${body})`;
+    await sql`INSERT INTO posts (title, body, synopsis, tags) VALUES (${title}, ${body}, ${synopsis}, ${tags})`;
 
   if (resp.rowCount < 1) throw new Error('Failed to create post');
 }
@@ -56,11 +63,22 @@ async function createPost(title: string, body: string) {
 /**
  * Edit a post by its id.
  */
-async function editPost(id: number, title: string, body: string) {
+async function editPost(
+  id: number,
+  title: string,
+  body: string,
+  synopsis: string,
+  tags: string,
+) {
   if (!sql) return;
 
-  const resp =
-    await sql`UPDATE posts SET title = ${title}, body = ${body}, updated_at = NOW() WHERE id = ${id}`;
+  const resp = await sql`UPDATE posts SET 
+                 title = ${title},
+                 body = ${body},
+                 synopsis = ${synopsis},
+                 tags = ${tags},
+                 updated_at = NOW() 
+             WHERE id = ${id}`;
 
   if (resp.rowCount < 1) throw new Error('Failed to edit post');
 }

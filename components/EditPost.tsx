@@ -21,6 +21,8 @@ export default function EditPost({ post }: { post?: Post }) {
     initialValues: {
       title: post ? post.title : '',
       body: post ? post.body : '',
+      synopsis: post ? post.synopsis : '',
+      tags: post ? post.tags : '',
     },
   });
   if (!post) {
@@ -28,6 +30,8 @@ export default function EditPost({ post }: { post?: Post }) {
       id: -1,
       title: '',
       body: '',
+      synopsis: '',
+      tags: '',
       created_at: new Date(),
     };
   }
@@ -53,6 +57,8 @@ export default function EditPost({ post }: { post?: Post }) {
         id: post.id === -1 ? undefined : post.id,
         title: form.values.title,
         body: form.values.body,
+        synopsis: form.values.synopsis,
+        tags: form.values.tags,
       }),
     });
     notifications.hide(loading);
@@ -66,7 +72,6 @@ export default function EditPost({ post }: { post?: Post }) {
       });
       return;
     }
-    // TODO: Show a success message.
 
     notifications.show({
       title: 'Post saved',
@@ -97,6 +102,12 @@ export default function EditPost({ post }: { post?: Post }) {
             mt="sm"
             {...form.getInputProps('title')}
           />
+          <TextInput
+            label="Synopsis"
+            mt="sm"
+            {...form.getInputProps('synopsis')}
+          />
+          <TextInput label="Tags" mt="sm" {...form.getInputProps('tags')} />
           <Textarea
             label="Body"
             mt="sm"
