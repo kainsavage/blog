@@ -4,7 +4,7 @@ import { Post } from '@/helpers/db';
 import { useForm } from '@mantine/form';
 import { Button, Switch, Textarea, TextInput } from '@mantine/core';
 import { md2html } from '@/helpers/markdown';
-import { useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import BlogPost from '@/components/BlogPost';
 import { fq } from '@/helpers/fetch';
 import { notifications } from '@mantine/notifications';
@@ -23,6 +23,7 @@ export default function EditPost({ post }: { post?: Post }) {
       body: post ? post.body : '',
       synopsis: post ? post.synopsis : '',
       tags: post ? post.tags : '',
+      image: '', // TODO
     },
   });
   if (!post) {
@@ -37,6 +38,7 @@ export default function EditPost({ post }: { post?: Post }) {
   }
   const [preview, setPreview] = useState('');
   const [checked, setChecked] = useState(false);
+  const imageRef = useRef<HTMLInputElement>(null);
 
   async function savePost() {
     if (!post) return; // Impossible.
@@ -83,6 +85,45 @@ export default function EditPost({ post }: { post?: Post }) {
     });
   }
 
+  async function uploadHeroImage(event: ChangeEvent<HTMLInputElement>) {
+    if (!event.target?.files?.length) return;
+
+    const loading = notifications.show({
+      title: 'Uploading image',
+      message: 'Please wait...',
+      autoClose: false,
+      loading: true,
+    });
+
+    const file = event.target.files[0];
+    const resp = await fetch(fq`/api/image`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': file.type,
+      },
+      body: file,
+    });
+    notifications.hide(loading);
+
+    if (!resp.ok) {
+      console.error('Failed to upload hero image', await resp.text());
+      notifications.show({
+        title: 'Failed to upload hero image',
+        message: 'Please try again later.',
+        color: 'red',
+      });
+      return;
+    }
+
+    const url = (await resp.json()).url;
+    form.setFieldValue('image', url);
+    notifications.show({
+      title: 'Hero uploaded successfully',
+      message: 'Click again to upload different hero image.',
+      autoClose: 1000,
+    });
+  }
+
   function togglePreview() {
     void md2html(form.values.body)
       .then((html) => setPreview(html))
@@ -96,26 +137,36 @@ export default function EditPost({ post }: { post?: Post }) {
       <h1 className="text-xl md:text-3xl text-center py-4 px-2">Edit Post</h1>
       <Switch checked={checked} onChange={togglePreview} label="Preview" />
       {!checked ? (
-        <form className="md:w-[1024px]" onSubmit={form.onSubmit(savePost)}>
-          <TextInput
-            label="Title (slug)"
-            mt="sm"
-            {...form.getInputProps('title')}
-          />
-          <TextInput
-            label="Synopsis"
-            mt="sm"
-            {...form.getInputProps('synopsis')}
-          />
-          <TextInput label="Tags" mt="sm" {...form.getInputProps('tags')} />
-          <Textarea
-            label="Body"
-            mt="sm"
-            {...form.getInputProps('body')}
-            className="flex flex-col"
-            rows={40}
-          />
-        </form>
+        <>
+          <input type="file" hidden ref={imageRef} onChange={uploadHeroImage} />
+          <form className="md:w-[1024px]" onSubmit={form.onSubmit(savePost)}>
+            <TextInput
+              label="Hero Image"
+              {...form.getInputProps('image')}
+              readOnly
+              onClick={() => imageRef?.current?.click()}
+            />
+            <img src={form.values.image} alt="Hero" className="w-full" />
+            <TextInput
+              label="Title (slug)"
+              mt="sm"
+              {...form.getInputProps('title')}
+            />
+            <TextInput
+              label="Synopsis"
+              mt="sm"
+              {...form.getInputProps('synopsis')}
+            />
+            <TextInput label="Tags" mt="sm" {...form.getInputProps('tags')} />
+            <Textarea
+              label="Body"
+              mt="sm"
+              {...form.getInputProps('body')}
+              className="flex flex-col"
+              rows={40}
+            />
+          </form>
+        </>
       ) : (
         <BlogPost
           post={{ ...post, title: form.values.title! }}
