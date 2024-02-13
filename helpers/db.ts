@@ -9,6 +9,7 @@ export type Post = {
   body: string;
   synopsis: string;
   tags: string;
+  hero_url: string;
   created_at: Date;
   updated_at?: Date;
 };
@@ -51,11 +52,12 @@ async function createPost(
   body: string,
   synopsis: string,
   tags: string,
+  hero_url: string,
 ) {
   if (!sql) return;
 
   const resp =
-    await sql`INSERT INTO posts (title, body, synopsis, tags) VALUES (${title}, ${body}, ${synopsis}, ${tags})`;
+    await sql`INSERT INTO posts (title, body, synopsis, tags, hero_url) VALUES (${title}, ${body}, ${synopsis}, ${tags}, ${hero_url})`;
 
   if (resp.rowCount < 1) throw new Error('Failed to create post');
 }
@@ -69,16 +71,18 @@ async function editPost(
   body: string,
   synopsis: string,
   tags: string,
+  hero_url: string,
 ) {
   if (!sql) return;
 
   const resp = await sql`UPDATE posts SET 
-                 title = ${title},
-                 body = ${body},
-                 synopsis = ${synopsis},
-                 tags = ${tags},
-                 updated_at = NOW() 
-             WHERE id = ${id}`;
+       title = ${title},
+       body = ${body},
+       synopsis = ${synopsis},
+       tags = ${tags},
+       hero_url = ${hero_url},
+       updated_at = NOW() 
+     WHERE id = ${id}`;
 
   if (resp.rowCount < 1) throw new Error('Failed to edit post');
 }

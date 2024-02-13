@@ -23,7 +23,7 @@ export default function EditPost({ post }: { post?: Post }) {
       body: post ? post.body : '',
       synopsis: post ? post.synopsis : '',
       tags: post ? post.tags : '',
-      image: '', // TODO
+      hero_url: post ? post.hero_url : '',
     },
   });
   if (!post) {
@@ -33,6 +33,7 @@ export default function EditPost({ post }: { post?: Post }) {
       body: '',
       synopsis: '',
       tags: '',
+      hero_url: '',
       created_at: new Date(),
     };
   }
@@ -61,6 +62,7 @@ export default function EditPost({ post }: { post?: Post }) {
         body: form.values.body,
         synopsis: form.values.synopsis,
         tags: form.values.tags,
+        hero_url: form.values.hero_url,
       }),
     });
     notifications.hide(loading);
@@ -116,7 +118,7 @@ export default function EditPost({ post }: { post?: Post }) {
     }
 
     const url = (await resp.json()).url;
-    form.setFieldValue('image', url);
+    form.setFieldValue('hero_url', url);
     notifications.show({
       title: 'Hero uploaded successfully',
       message: 'Click again to upload different hero image.',
@@ -142,11 +144,10 @@ export default function EditPost({ post }: { post?: Post }) {
           <form className="md:w-[1024px]" onSubmit={form.onSubmit(savePost)}>
             <TextInput
               label="Hero Image"
-              {...form.getInputProps('image')}
+              {...form.getInputProps('hero_url')}
               readOnly
               onClick={() => imageRef?.current?.click()}
             />
-            <img src={form.values.image} alt="Hero" className="w-full" />
             <TextInput
               label="Title (slug)"
               mt="sm"

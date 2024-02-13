@@ -8,8 +8,7 @@ export async function PUT(request: NextRequest) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { id, title, body, synopsis, tags } = await request.json();
-  console.log(synopsis, tags);
+  const { id, title, body, synopsis, tags, hero_url } = await request.json();
 
   if (!title || !body) {
     return Response.json({ error: 'Invalid request' }, { status: 400 });
@@ -17,9 +16,16 @@ export async function PUT(request: NextRequest) {
 
   try {
     if (!id) {
-      await db.createPost(title, body, synopsis, tags);
+      await db.createPost(title, body, synopsis, tags, hero_url);
     } else {
-      await db.editPost(parseInt(id, 10), title, body, synopsis, tags);
+      await db.editPost(
+        parseInt(id, 10),
+        title,
+        body,
+        synopsis,
+        tags,
+        hero_url,
+      );
     }
   } catch (e) {
     return Response.json({ error: 'Failed to edit post' }, { status: 500 });

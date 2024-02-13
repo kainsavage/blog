@@ -11,9 +11,24 @@ export async function generateMetadata({
   params: { slug: string };
 }): Promise<Metadata> {
   const post = await db.getPostBySlug(params.slug);
+  const title = `${post?.title || 'Blog Post Not Found'} | TeamClerks`;
 
   return {
-    title: `${post?.title || 'Blog Post Not Found'} | TeamClerks`,
+    title: title,
+    openGraph: {
+      title: title,
+      type: 'article',
+      url: `https://blog.teamclerks.net/post/${params.slug}`,
+      description: post?.synopsis || '',
+      images: [
+        {
+          url: post?.hero_url || '',
+          width: 800,
+          height: 600,
+          alt: post?.title || '',
+        },
+      ],
+    },
   };
 }
 
