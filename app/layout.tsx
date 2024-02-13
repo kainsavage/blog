@@ -20,10 +20,23 @@ import { Notifications } from '@mantine/notifications';
 config.autoAddCss = false;
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: 'Teamclerks Blog',
-  description: 'Teamclerks Blog',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const title = `TeamClerks`;
+
+  return {
+    title: title,
+    openGraph: {
+      title: title,
+      type: 'website',
+      url: `https://blog.teamclerks.net`,
+      description: 'The TeamClerks blog',
+      locale: 'en_US',
+      siteName: 'TeamClerks Blog',
+      emails: ['kain@teamclerks.net'],
+      countryName: 'United States',
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

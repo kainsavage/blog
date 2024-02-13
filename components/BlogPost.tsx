@@ -7,7 +7,6 @@ import { Popover, Text } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import slugs from '@/helpers/slugs';
 import PostedDate from '@/components/PostedDate';
-import Image from 'next/image';
 
 export default function BlogPost({
   post,
@@ -22,12 +21,6 @@ export default function BlogPost({
 
   return (
     <div className="flex-col flex-grow">
-      <Image
-        src={post.hero_url}
-        alt={post.synopsis}
-        width={1008}
-        height={600}
-      />
       <div className="flex-row">
         <Popover
           width={200}

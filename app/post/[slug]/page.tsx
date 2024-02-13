@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { md2html } from '@/helpers/markdown';
 import { getServerSession } from 'next-auth';
+import Image from 'next/image';
 
 export async function generateMetadata({
   params,
@@ -16,6 +17,7 @@ export async function generateMetadata({
   return {
     title: title,
     openGraph: {
+      authors: ['kain'],
       title: title,
       type: 'article',
       url: `https://blog.teamclerks.net/post/${params.slug}`,
@@ -23,11 +25,15 @@ export async function generateMetadata({
       images: [
         {
           url: post?.hero_url || '',
-          width: 800,
-          height: 600,
+          width: 1008,
+          height: 567,
           alt: post?.title || '',
         },
       ],
+      tags: post?.tags || [],
+      publishedTime: post?.created_at.toISOString(),
+      modifiedTime:
+        post?.updated_at?.toISOString() || post?.created_at.toISOString(),
     },
   };
 }
@@ -40,10 +46,18 @@ export default async function Post({ params }: { params: { slug: string } }) {
   const html = await md2html(post.body);
 
   return (
-    <BlogPost
-      post={post}
-      hydratedHtml={html}
-      canEdit={!!session && !!session.user}
-    />
+    <>
+      <Image
+        src={post.hero_url}
+        alt={post.synopsis}
+        width={1008}
+        height={567}
+      />
+      <BlogPost
+        post={post}
+        hydratedHtml={html}
+        canEdit={!!session && !!session.user}
+      />
+    </>
   );
 }
