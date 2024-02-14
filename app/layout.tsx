@@ -53,6 +53,7 @@ export default async function RootLayout({
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
+        <meta property="twitter:domain" content="blog.teamclerks.net" />
         <script type="text/javascript" src="/scripts/prism.js" async />
       </head>
       <body className={inter.className}>

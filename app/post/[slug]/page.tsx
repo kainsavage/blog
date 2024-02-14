@@ -25,8 +25,6 @@ export async function generateMetadata({
       images: [
         {
           url: post?.hero_url || '',
-          width: 1008,
-          height: 567,
           alt: post?.title || '',
         },
       ],
