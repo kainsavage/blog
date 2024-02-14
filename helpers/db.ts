@@ -92,7 +92,8 @@ async function editPost(
  */
 async function getPostBySlug(slug: string): Promise<Post | undefined> {
   const title = slugs.unslugify(slug).toLowerCase();
-  const res = await sql`SELECT * from posts where LOWER(title) = ${title}`;
+  const res =
+    await sql`SELECT title, body, synopsis, tags, hero_url, created_at, updated_at from posts where LOWER(title) = ${title}`;
 
   return res.rows ? (res.rows[0] as Post) : undefined;
 }

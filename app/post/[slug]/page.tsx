@@ -40,7 +40,7 @@ export async function generateMetadata({
 }
 
 export default async function Post({ params }: { params: { slug: string } }) {
-  const post = await db.getPostBySlug(params.slug);
+  const post = await db.getPostBySlug(params.slug + '');
   const session = await getServerSession();
   // TODO - not the way to do this.
   if (!post) redirect('/');
