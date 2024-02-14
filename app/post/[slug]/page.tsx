@@ -33,6 +33,9 @@ export async function generateMetadata({
       modifiedTime:
         post?.updated_at?.toISOString() || post?.created_at.toISOString(),
     },
+    robots: {
+      'max-image-preview': 'large',
+    },
   };
 }
 
