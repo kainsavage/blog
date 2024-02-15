@@ -35,6 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
       emails: ['kain@teamclerks.net'],
       countryName: 'United States',
     },
+    metadataBase: new URL('https://blog.teamclerks.net'),
   };
 }
 
