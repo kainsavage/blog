@@ -1,4 +1,5 @@
 import Markdown from '@/components/Markdown';
+import { Metadata } from 'next';
 
 const years = new Date().getFullYear() - 2006;
 
@@ -31,6 +32,10 @@ BlueSky is a social media platform with a more self-identifying form of verifica
 state that I am \`kain@teamclerks.net\` on their platform and they ask me to set some DNS records
 to prove that assertion. I think that is a pretty cool way to do it. 
 `;
+
+export const metadata: Metadata = {
+  title: 'About | Teamclerks',
+};
 
 export default async function About() {
   return <Markdown markdown={markdown} />;
