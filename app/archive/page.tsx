@@ -1,13 +1,13 @@
 import db from '@/helpers/db';
-import PostChip from '@/app/archive/components/PostChip';
+import PostCard from '@/app/archive/components/PostCard';
 
 export default async function Archive() {
   const posts = await db.getAllPosts();
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="grid md:grid-cols-3 gap-8">
       {posts.map((post) => (
-        <PostChip post={post} key={post.id} />
+        <PostCard post={post} key={post.id} />
       ))}
     </div>
   );

@@ -7,6 +7,9 @@ import { Popover, Text } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import slugs from '@/helpers/slugs';
 import PostedDate from '@/components/PostedDate';
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 
 export default function BlogPost({
   post,
@@ -21,20 +24,16 @@ export default function BlogPost({
 
   return (
     <div className="flex-col flex-grow">
-      <div className="flex-row">
+      <div className="flex flex-row justify-between">
         <Popover
           width={200}
           position="bottom-start"
           withArrow
           shadow="md"
           onOpen={() => {
-            if (canEdit) {
-              void router.push(`/post/edit?id=${post.id}`);
-            } else {
-              void navigator.clipboard.writeText(
-                `${window.location.origin}/post/${slugs.slugify(post.title)}`,
-              );
-            }
+            void navigator.clipboard.writeText(
+              `${window.location.origin}/post/${slugs.slugify(post.title)}`,
+            );
           }}
         >
           <Popover.Target>
@@ -46,6 +45,11 @@ export default function BlogPost({
             <Text size="xs">Copied to clipboard!</Text>
           </Popover.Dropdown>
         </Popover>
+        {canEdit && (
+          <Link href={`/post/edit?id=${post.id}`} className="ml-3">
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </Link>
+        )}
       </div>
       <div className="italic text-sm">
         <PostedDate post={post} />
