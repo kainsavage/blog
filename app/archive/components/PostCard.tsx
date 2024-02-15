@@ -10,7 +10,7 @@ export default function PostCard({ post }: { post: Post }) {
   const router = useRouter();
 
   return (
-    <div className="shadow-2xl shadow-gray-950 transition ease-in-out hover:scale-105 rounded-lg border-2 border-transparent">
+    <div className="z-[120] shadow-2xl shadow-gray-950 transition ease-in-out hover:scale-105 rounded-lg border-2 border-transparent">
       <div
         className="md:max-w-[320px] cursor-pointer"
         onClick={() => router.push(`/post/${slugs.slugify(post.title)}`)}
