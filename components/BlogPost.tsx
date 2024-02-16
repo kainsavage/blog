@@ -9,7 +9,6 @@ import PostedDate from '@/components/PostedDate';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-import Image from 'next/image';
 
 export default function BlogPost({
   post,
@@ -25,11 +24,12 @@ export default function BlogPost({
   return (
     <div className="flex-col flex-grow">
       {showImage && (
-        <Image
+        <img
           src={post.hero_url}
           alt={post.synopsis}
-          width={1008}
-          height={567}
+          fetchPriority="low"
+          loading="lazy"
+          decoding="async"
         />
       )}
       <div className="flex flex-row justify-between">
