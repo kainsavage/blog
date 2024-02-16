@@ -170,8 +170,16 @@ export default function EditPost({ post }: { post?: Post }) {
         </>
       ) : (
         <BlogPost
-          post={{ ...post, title: form.values.title! }}
+          post={{
+            ...post,
+            title: form.values.title!,
+            synopsis: form.values.synopsis!,
+            tags: form.values.tags!,
+            body: form.values.body!,
+            hero_url: form.values.hero_url!,
+          }}
           hydratedHtml={preview}
+          showImage
         />
       )}
       <Button fullWidth mt="xl" onClick={savePost}>
