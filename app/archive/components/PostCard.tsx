@@ -28,18 +28,17 @@ export default function PostCard({ post }: { post: Post }) {
             <PostedDate post={post} showUpdated={false} />
           </div>
           <div className="pb-2">{post.synopsis}</div>
-          <ul className="flex flex-row gap-2">
+          <div className="flex flex-row gap-2 flex-wrap">
             {post.tags.split(',').map((tag) => (
-              <li key={tag}>
-                <Pill
-                  disabled
-                  className="border border-[var(--mantine-color-text)] !cursor-auto"
-                >
-                  {tag}
-                </Pill>
-              </li>
+              <Pill
+                key={tag}
+                disabled
+                className="border border-[var(--mantine-color-text)] !cursor-auto"
+              >
+                {tag}
+              </Pill>
             ))}
-          </ul>
+          </div>
         </div>
       </div>
     </div>

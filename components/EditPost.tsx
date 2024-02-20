@@ -196,6 +196,25 @@ export default function EditPost({ post }: { post?: Post }) {
               ref={bodyRef}
             />
           </form>
+          <Container mt="xl" className="flex flex-row gap-8">
+            <Button fullWidth onClick={open} color="gray" c="blue">
+              Cancel
+            </Button>
+            <Button fullWidth onClick={savePost}>
+              Save
+            </Button>
+          </Container>
+          <Confirm
+            title="Cancel?"
+            message="Are you sure you want to cancel editing? Unsaved changes will be lost."
+            cancelLabel="No, continue editing"
+            confirmLabel="Yes, cancel"
+            opened={opened}
+            close={close}
+            onConfirm={() =>
+              router.push(fq`/post/${slugs.slugify(post!.title)}`)
+            }
+          />
         </>
       ) : (
         <BlogPost
@@ -211,23 +230,6 @@ export default function EditPost({ post }: { post?: Post }) {
           showImage
         />
       )}
-      <Container mt="xl" className="flex flex-row gap-8">
-        <Button fullWidth onClick={open} color="gray" c="blue">
-          Cancel
-        </Button>
-        <Button fullWidth onClick={savePost}>
-          Save
-        </Button>
-      </Container>
-      <Confirm
-        title="Cancel?"
-        message="Are you sure you want to cancel editing? Unsaved changes will be lost."
-        cancelLabel="No, continue editing"
-        confirmLabel="Yes, cancel"
-        opened={opened}
-        close={close}
-        onConfirm={() => router.push(fq`/post/${slugs.slugify(post!.title)}`)}
-      />
     </div>
   );
 }
