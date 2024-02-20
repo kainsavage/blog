@@ -20,7 +20,7 @@ export default function TeamclerksAppShell({
     >
       <AppShell.Header
         px={8}
-        className="hidden md:flex max-w-[1024px] mx-auto  flex-col md:flex-row md:justify-between"
+        className="hidden md:flex max-w-[1024px] mx-auto flex-col md:flex-row md:justify-between"
       >
         <Group className="mx-auto md:mx-0 py-4 md:py-0">
           <Logo />

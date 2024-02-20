@@ -2,7 +2,7 @@
 
 import { Post } from '@/helpers/db';
 import { useForm } from '@mantine/form';
-import { Button, Switch, Textarea, TextInput } from '@mantine/core';
+import { Button, Container, Switch, Textarea, TextInput } from '@mantine/core';
 import { md2html } from '@/helpers/markdown';
 import { ChangeEvent, useCallback, useRef, useState } from 'react';
 import BlogPost from '@/components/BlogPost';
@@ -11,6 +11,8 @@ import { notifications } from '@mantine/notifications';
 import slugs from '@/helpers/slugs';
 import { useRouter } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
+import { useDisclosure } from '@mantine/hooks';
+import Confirm from '@/components/Confirm';
 
 /**
  * Technically, this component is create/edit post based on whether you pass an existing post to
@@ -60,6 +62,7 @@ export default function EditPost({ post }: { post?: Post }) {
     onDrop,
     noClick: true,
   });
+  const [opened, { close, open }] = useDisclosure(false);
 
   async function savePost() {
     if (!post) return; // Impossible.
@@ -157,20 +160,14 @@ export default function EditPost({ post }: { post?: Post }) {
       .then(() => setChecked(!checked));
   }
 
-  // TODO - Change these posts to allow for metadata, hero images, etc.
-
   return (
-    <div>
+    <div className="md:w-[1008px]">
       <h1 className="text-xl md:text-3xl text-center py-4 px-2">Edit Post</h1>
       <Switch checked={checked} onChange={togglePreview} label="Preview" />
       {!checked ? (
         <>
           <input type="file" hidden ref={imageRef} onChange={uploadHeroImage} />
-          <form
-            className="md:w-[1024px]"
-            onSubmit={form.onSubmit(savePost)}
-            {...getRootProps()}
-          >
+          <form onSubmit={form.onSubmit(savePost)} {...getRootProps()}>
             <TextInput
               label="Hero Image"
               {...form.getInputProps('hero_url')}
@@ -214,9 +211,23 @@ export default function EditPost({ post }: { post?: Post }) {
           showImage
         />
       )}
-      <Button fullWidth mt="xl" onClick={savePost}>
-        Save
-      </Button>
+      <Container mt="xl" className="flex flex-row gap-8">
+        <Button fullWidth onClick={open} color="gray" c="blue">
+          Cancel
+        </Button>
+        <Button fullWidth onClick={savePost}>
+          Save
+        </Button>
+      </Container>
+      <Confirm
+        title="Cancel?"
+        message="Are you sure you want to cancel editing? Unsaved changes will be lost."
+        cancelLabel="No, continue editing"
+        confirmLabel="Yes, cancel"
+        opened={opened}
+        close={close}
+        onConfirm={() => router.push(fq`/post/${slugs.slugify(post!.title)}`)}
+      />
     </div>
   );
 }
