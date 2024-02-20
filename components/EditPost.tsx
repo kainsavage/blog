@@ -4,12 +4,13 @@ import { Post } from '@/helpers/db';
 import { useForm } from '@mantine/form';
 import { Button, Switch, Textarea, TextInput } from '@mantine/core';
 import { md2html } from '@/helpers/markdown';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useRef, useState } from 'react';
 import BlogPost from '@/components/BlogPost';
 import { fq } from '@/helpers/fetch';
 import { notifications } from '@mantine/notifications';
 import slugs from '@/helpers/slugs';
 import { useRouter } from 'next/navigation';
+import { useDropzone } from 'react-dropzone';
 
 /**
  * Technically, this component is create/edit post based on whether you pass an existing post to
@@ -40,6 +41,25 @@ export default function EditPost({ post }: { post?: Post }) {
   const [preview, setPreview] = useState('');
   const [checked, setChecked] = useState(false);
   const imageRef = useRef<HTMLInputElement>(null);
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
+  const onDrop = useCallback(async (acceptedFiles: Blob[]) => {
+    // In practice, I will only support uploading one image at a time.
+    const url = await upload_image(acceptedFiles[0]);
+    if (bodyRef.current) {
+      const start = bodyRef.current.selectionStart;
+      const end = bodyRef.current.selectionEnd;
+      form.setFieldValue(
+        'body',
+        form.values.body.slice(0, start) +
+          `![](${url})` +
+          form.values.body.slice(end),
+      );
+    }
+  }, []);
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    noClick: true,
+  });
 
   async function savePost() {
     if (!post) return; // Impossible.
@@ -87,9 +107,7 @@ export default function EditPost({ post }: { post?: Post }) {
     });
   }
 
-  async function uploadHeroImage(event: ChangeEvent<HTMLInputElement>) {
-    if (!event.target?.files?.length) return;
-
+  async function upload_image(file: Blob): Promise<string> {
     const loading = notifications.show({
       title: 'Uploading image',
       message: 'Please wait...',
@@ -97,7 +115,6 @@ export default function EditPost({ post }: { post?: Post }) {
       loading: true,
     });
 
-    const file = event.target.files[0];
     const resp = await fetch(fq`/api/image`, {
       method: 'POST',
       headers: {
@@ -108,17 +125,25 @@ export default function EditPost({ post }: { post?: Post }) {
     notifications.hide(loading);
 
     if (!resp.ok) {
-      console.error('Failed to upload hero image', await resp.text());
+      console.error('Failed to upload image', await resp.text());
       notifications.show({
-        title: 'Failed to upload hero image',
+        title: 'Failed to upload image',
         message: 'Please try again later.',
         color: 'red',
       });
-      return;
+      throw new Error('Failed to upload image');
     }
 
-    const url = (await resp.json()).url;
+    return (await resp.json()).url;
+  }
+
+  async function uploadHeroImage(event: ChangeEvent<HTMLInputElement>) {
+    if (!event.target?.files?.length) return;
+
+    const file = event.target.files[0];
+    const url = await upload_image(file);
     form.setFieldValue('hero_url', url);
+
     notifications.show({
       title: 'Hero uploaded successfully',
       message: 'Click again to upload different hero image.',
@@ -141,7 +166,11 @@ export default function EditPost({ post }: { post?: Post }) {
       {!checked ? (
         <>
           <input type="file" hidden ref={imageRef} onChange={uploadHeroImage} />
-          <form className="md:w-[1024px]" onSubmit={form.onSubmit(savePost)}>
+          <form
+            className="md:w-[1024px]"
+            onSubmit={form.onSubmit(savePost)}
+            {...getRootProps()}
+          >
             <TextInput
               label="Hero Image"
               {...form.getInputProps('hero_url')}
@@ -159,12 +188,15 @@ export default function EditPost({ post }: { post?: Post }) {
               {...form.getInputProps('synopsis')}
             />
             <TextInput label="Tags" mt="sm" {...form.getInputProps('tags')} />
+            {/* Used by react-dropzone */}
+            <input {...getInputProps()} />
             <Textarea
               label="Body"
               mt="sm"
               {...form.getInputProps('body')}
               className="flex flex-col"
               rows={40}
+              ref={bodyRef}
             />
           </form>
         </>
