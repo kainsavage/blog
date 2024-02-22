@@ -5,7 +5,9 @@ import { md2html } from '@/helpers/markdown';
 import PostBody from '@/components/PostBody';
 
 /**
- * Renders markdown as HTML.
+ * Renders markdown as HTML in a PostBody. This is a client-rendered component to properly render
+ * markdown in the browser when hydration is not available (e.g. when viewing the preview render
+ * of a post in the browser).
  */
 export default function Markdown({ markdown }: { markdown: string }) {
   const [html, setHtml] = useState<string | undefined>(undefined);

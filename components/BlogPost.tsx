@@ -1,14 +1,12 @@
-'use client';
-
 import { Post } from '@/helpers/db';
 import Markdown from '@/components/Markdown';
 import PostBody from '@/components/PostBody';
-import { Popover, Text } from '@mantine/core';
-import slugs from '@/helpers/slugs';
 import PostedDate from '@/components/PostedDate';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import CopyPopover from '@/components/CopyPopover';
+import slugs from '@/helpers/slugs';
 
 export default function BlogPost({
   post,
@@ -33,26 +31,16 @@ export default function BlogPost({
         />
       )}
       <div className="flex flex-row justify-between">
-        <Popover
-          width={200}
-          position="bottom-start"
-          withArrow
-          shadow="md"
-          onOpen={() => {
-            void navigator.clipboard.writeText(
-              `${window.location.origin}/post/${slugs.slugify(post.title)}`,
-            );
-          }}
+        <CopyPopover
+          post={post}
+          toCopy={`${process.env.NEXT_PUBLIC_API_URL}/post/${slugs.slugify(
+            post.title,
+          )}`}
         >
-          <Popover.Target>
-            <h3 className="text-[2rem] font-extrabold text-left cursor-pointer">
-              {post.title}
-            </h3>
-          </Popover.Target>
-          <Popover.Dropdown>
-            <Text size="xs">Copied to clipboard!</Text>
-          </Popover.Dropdown>
-        </Popover>
+          <h3 className="text-[2rem] font-extrabold text-left cursor-pointer">
+            {post.title}
+          </h3>
+        </CopyPopover>
         {canEdit && (
           <Link href={`/post/edit?id=${post.id}`} className="ml-3">
             <FontAwesomeIcon icon={faPenToSquare} />

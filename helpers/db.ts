@@ -20,6 +20,7 @@ export type Post = {
 async function getAllPosts(): Promise<Post[]> {
   if (!sql) return [];
 
+  // TODO - this should be a published_date, not created_at.
   const res = await sql`SELECT * from posts ORDER BY created_at DESC`;
   return res.rows as Post[];
 }
@@ -30,6 +31,7 @@ async function getAllPosts(): Promise<Post[]> {
 async function getMostRecentPost(): Promise<Post> {
   if (!sql) return {} as Post;
 
+  // TODO - this should be a published_date, not created_at.
   const res = await sql`SELECT * from posts ORDER BY created_at DESC LIMIT 1`;
   return res.rows[0] as Post;
 }
@@ -100,7 +102,8 @@ async function getPostBySlug(slug: string): Promise<Post | undefined> {
 async function getRecentPosts(): Promise<Post[]> {
   if (!sql) return [];
 
-  const res = await sql`SELECT * from posts ORDER BY created_at DESC LIMIT 10`;
+  // TODO - this should be a published_date, not created_at.
+  const res = await sql`SELECT * from posts ORDER BY created_at DESC LIMIT 3`;
   return res.rows as Post[];
 }
 
