@@ -6,11 +6,19 @@ import PostedDate from '@/components/PostedDate';
 import { BackgroundImage, Pill } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 
-export default function PostCard({ post }: { post: Post }) {
+export default function PostCard({
+  post,
+  className,
+}: {
+  post: Post;
+  className?: string;
+}) {
   const router = useRouter();
 
   return (
-    <div className="z-[120] shadow-2xl shadow-gray-950 transition ease-in-out hover:scale-105 rounded-lg border-2 border-transparent">
+    <div
+      className={`z-[120] shadow-2xl shadow-gray-950 transition ease-in-out hover:scale-105 rounded-lg border-2 border-transparent ${className}`}
+    >
       <div
         className="md:max-w-[320px] cursor-pointer"
         onClick={() => router.push(`/post/${slugs.slugify(post.title)}`)}
