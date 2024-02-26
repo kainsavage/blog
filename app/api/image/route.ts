@@ -3,6 +3,10 @@ import { getServerSession } from 'next-auth';
 import { v4 as uuidv4 } from 'uuid';
 import { uploadPublicImage } from '@/helpers/s3';
 
+/**
+ * Uploads an image to the public S3 bucket, assigns it a randomly UUID filename, and returns the
+ * URL to the object.
+ */
 export async function POST(request: NextRequest) {
   const session = await getServerSession();
   if (!session || !session.user) {
@@ -27,6 +31,4 @@ export async function POST(request: NextRequest) {
     console.error(e);
     return Response.json({ error: 'Failed to process file' }, { status: 500 });
   }
-
-  return Response.json({ error: 'Unknown error' }, { status: 500 });
 }

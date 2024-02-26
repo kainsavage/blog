@@ -65,7 +65,7 @@
   & hr {
     border: 0;
     height: 1px;
-    background: #2d2d2d;
+    background: var(--mantine-color-text);
     margin: 1rem 0;
   }
 
