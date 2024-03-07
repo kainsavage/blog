@@ -206,11 +206,7 @@ export default function EditPost({ post }: { post?: Post }) {
     <div className="md:w-[1008px]">
       <h1 className="text-xl md:text-3xl text-center py-4 px-2">Edit Post</h1>
       <Switch checked={checked} onChange={togglePreview} label="Preview" />
-      {post.is_draft && (
-        <Button fullWidth onClick={publishPost}>
-          Publish
-        </Button>
-      )}
+      {post.is_draft && <Button onClick={publishPost}>Publish</Button>}
       {!checked ? (
         <>
           <input type="file" hidden ref={imageRef} onChange={uploadHeroImage} />
@@ -244,7 +240,7 @@ export default function EditPost({ post }: { post?: Post }) {
             />
           </form>
           <Container mt="xl" className="flex flex-row gap-8">
-            <Button fullWidth onClick={open} color="gray" c="blue">
+            <Button fullWidth onClick={open} variant="light">
               Cancel
             </Button>
             <Button fullWidth onClick={savePost}>

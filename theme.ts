@@ -41,10 +41,26 @@ const grey: MantineColorsTuple = [
   '#575757',
 ];
 
+const tan: MantineColorsTuple = [
+  '#fdf4eb',
+  '#eae8e1',
+  '#d3cec8',
+  '#b9b4ab',
+  '#a39d92',
+  '#958e82',
+  '#8f8779',
+  '#7d7466',
+  '#706757',
+  '#625947',
+];
+
 export const theme = createTheme({
+  primaryColor: 'tan',
+  primaryShade: 6,
   colors: {
     red,
     teal,
     grey,
+    tan,
   },
 });
