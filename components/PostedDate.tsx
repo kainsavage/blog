@@ -10,11 +10,13 @@ export default function PostedDate({
   const updated = post.updated_at
     ? new Date(post.updated_at).toISOString().substring(0, 10)
     : '';
-  const created = new Date(post.created_at).toISOString().substring(0, 10);
+  const created = new Date(post.published_at ?? post.created_at)
+    .toISOString()
+    .substring(0, 10);
 
   if (showUpdated && post.updated_at) {
     return <time dateTime={updated}>Updated {updated}</time>;
   }
 
-  return <time dateTime={created}>Written {created}</time>;
+  return <time dateTime={created}>Published {created}</time>;
 }

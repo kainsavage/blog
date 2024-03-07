@@ -37,6 +37,7 @@ export default function EditPost({ post }: { post?: Post }) {
       synopsis: '',
       tags: '',
       hero_url: '',
+      is_draft: false,
       created_at: new Date(),
     };
   }
@@ -63,6 +64,47 @@ export default function EditPost({ post }: { post?: Post }) {
     noClick: true,
   });
   const [opened, { close, open }] = useDisclosure(false);
+
+  async function publishPost() {
+    if (!post) return; // Impossible.
+
+    const loading = notifications.show({
+      title: 'Publishing post',
+      message: 'Please wait...',
+      autoClose: false,
+      loading: true,
+    });
+
+    const resp = await fetch(fq`/api/post/publish`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: post.id,
+      }),
+    });
+    notifications.hide(loading);
+
+    if (!resp.ok) {
+      console.error('Failed to publish post', await resp.text());
+      notifications.show({
+        title: 'Failed to publish post',
+        message: 'Please try again later.',
+        color: 'red',
+      });
+      return;
+    }
+
+    notifications.show({
+      title: 'Post published',
+      message: 'Redirecting to post...',
+      autoClose: 1000,
+      onClose: () => {
+        router.push(fq`/post/${slugs.slugify(form.values.title)}`);
+      },
+    });
+  }
 
   async function savePost() {
     if (!post) return; // Impossible.
@@ -164,6 +206,11 @@ export default function EditPost({ post }: { post?: Post }) {
     <div className="md:w-[1008px]">
       <h1 className="text-xl md:text-3xl text-center py-4 px-2">Edit Post</h1>
       <Switch checked={checked} onChange={togglePreview} label="Preview" />
+      {post.is_draft && (
+        <Button fullWidth onClick={publishPost}>
+          Publish
+        </Button>
+      )}
       {!checked ? (
         <>
           <input type="file" hidden ref={imageRef} onChange={uploadHeroImage} />

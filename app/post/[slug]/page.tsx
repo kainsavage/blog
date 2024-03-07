@@ -41,18 +41,16 @@ export async function generateMetadata({
 export default async function Post({ params }: { params: { slug: string } }) {
   const post = await db.getPostBySlug(params.slug);
   const session = await getServerSession();
-  // TODO - not the way to do this.
-  if (!post) redirect('/');
+  // TODO - not the way to do this. This really SHOULD be a 404 render.
+  if (!post || (post.is_draft && !session?.user)) redirect('/');
   const html = await md2html(post.body);
 
   return (
-    <>
-      <BlogPost
-        post={post}
-        hydratedHtml={html}
-        canEdit={!!session && !!session.user}
-        showImage
-      />
-    </>
+    <BlogPost
+      post={post}
+      hydratedHtml={html}
+      canEdit={!!session?.user}
+      showImage
+    />
   );
 }

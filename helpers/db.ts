@@ -12,6 +12,8 @@ export type Post = {
   hero_url: string;
   created_at: Date;
   updated_at?: Date;
+  is_draft: boolean;
+  published_at?: Date;
 };
 
 /**
@@ -21,7 +23,8 @@ async function getAllPosts(): Promise<Post[]> {
   if (!sql) return [];
 
   // TODO - this should be a published_date, not created_at.
-  const res = await sql`SELECT * from posts ORDER BY created_at DESC`;
+  const res =
+    await sql`SELECT * from posts WHERE is_draft = FALSE ORDER BY created_at DESC`;
   return res.rows as Post[];
 }
 
@@ -32,7 +35,8 @@ async function getMostRecentPost(): Promise<Post> {
   if (!sql) return {} as Post;
 
   // TODO - this should be a published_date, not created_at.
-  const res = await sql`SELECT * from posts ORDER BY created_at DESC LIMIT 1`;
+  const res =
+    await sql`SELECT * from posts WHERE is_draft = FALSE ORDER BY created_at DESC LIMIT 1`;
   return res.rows[0] as Post;
 }
 
@@ -90,7 +94,20 @@ async function editPost(
 }
 
 /**
+ * Publish a post by its id.
+ */
+async function publishPost(id: number) {
+  if (!sql) return;
+
+  const resp =
+    await sql`UPDATE posts SET is_draft = FALSE, published_at = NOW() WHERE id = ${id}`;
+
+  if (resp.rowCount < 1) throw new Error('Failed to publish post');
+}
+
+/**
  * Get a post by its slug. Converts the slug to a title and then queries the database for the post.
+ * This will return a post if it exists - hide the post if it is a draft.
  */
 async function getPostBySlug(slug: string): Promise<Post | undefined> {
   const title = slugs.unslugify(slug).toLowerCase();
@@ -102,18 +119,10 @@ async function getPostBySlug(slug: string): Promise<Post | undefined> {
 async function getRecentPosts(): Promise<Post[]> {
   if (!sql) return [];
 
-  // TODO - this should be a published_date, not created_at.
-  const res = await sql`SELECT * from posts ORDER BY created_at DESC LIMIT 3`;
+  const res =
+    await sql`SELECT * from posts WHERE is_draft = FALSE ORDER BY published_at DESC LIMIT 3`;
   return res.rows as Post[];
 }
-
-export type User = {
-  id: number;
-  username: string;
-  password: string;
-  created_at: Date;
-  updated_at: Date;
-};
 
 /**
  * Checks that a user exists - does not return the user.
@@ -128,13 +137,14 @@ async function getUser(
 
   if (!res.rows || res.rows.length < 1) return undefined;
 
+  let authorized;
   try {
     const saltedPasswordToCheck = await bcrypt.hash(password, 10);
-    if (!(await bcrypt.compare(password, saltedPasswordToCheck)))
-      throw new Error();
+    authorized = await bcrypt.compare(password, saltedPasswordToCheck);
   } catch (_) {
-    throw new Error('Invalid username or password.');
+    authorized = false;
   }
+  if (!authorized) throw new Error('Invalid username or password.');
 
   return {
     id: res.rows[0].id.toString(),
@@ -145,6 +155,7 @@ async function getUser(
 export default {
   getAllPosts,
   getMostRecentPost,
+  publishPost,
   getPost,
   createPost,
   editPost,
