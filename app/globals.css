@@ -7,17 +7,17 @@
 }
 
 body {
-  --mantine-color-body: #1E1F22FF;
-  --mantine-color-text: #B0AAA0FF;
+  --mantine-color-body: oklch(25.81% 0 80.69);
+  --mantine-color-text: oklch(74.01% 0.016 80.69);
 }
 
 a {
-  color: #e58a15;
+  color: oklch(74.01% 0.1525 80.69);
   text-decoration:  underline;
   transition-timing-function: cubic-bezier(0.4, 0.2, 0.2, 1);
   transition-duration: 300ms;
 
   &:hover {
-    color: #ffab54;
+    color: oklch(81.6% 0.1525 80.69);
   }
 }
