@@ -1,20 +1,18 @@
 import { Post } from '@/helpers/db';
 
-export default function PostedDate({
-  post,
-  showUpdated = true,
-}: {
+interface PostedDateProps {
   post: Post;
   showUpdated?: boolean;
-}) {
-  const updated = post.updated_at
-    ? new Date(post.updated_at).toISOString().substring(0, 10)
+}
+export default function PostedDate(props: PostedDateProps) {
+  const updated = props.post.updated_at
+    ? new Date(props.post.updated_at).toISOString().substring(0, 10)
     : '';
-  const created = new Date(post.published_at ?? post.created_at)
+  const created = new Date(props.post.published_at ?? props.post.created_at)
     .toISOString()
     .substring(0, 10);
 
-  if (showUpdated && post.updated_at) {
+  if (props.showUpdated && props.post.updated_at) {
     return <time dateTime={updated}>Updated {updated}</time>;
   }
 

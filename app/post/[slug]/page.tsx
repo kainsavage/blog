@@ -38,7 +38,11 @@ export async function generateMetadata({
   };
 }
 
-export default async function Post({ params }: { params: { slug: string } }) {
+interface PostProps {
+  params: { slug: string };
+}
+
+export default async function Post({ params }: PostProps) {
   const post = await db.getPostBySlug(params.slug);
   const session = await getServerSession();
   // TODO - not the way to do this. This really SHOULD be a 404 render.

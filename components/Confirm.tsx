@@ -1,14 +1,6 @@
 import { Button, Modal } from '@mantine/core';
 
-export default function Confirm({
-  title,
-  message,
-  opened,
-  close,
-  onConfirm,
-  cancelLabel = 'Cancel',
-  confirmLabel = 'Confirm',
-}: {
+interface ConfirmProps {
   title: string;
   message: string;
   opened: boolean;
@@ -16,15 +8,25 @@ export default function Confirm({
   onConfirm: () => void;
   cancelLabel?: string;
   confirmLabel?: string;
-}) {
+}
+
+export default function Confirm(props: ConfirmProps) {
+  const cancelLabel = props.cancelLabel ?? 'Cancel';
+  const confirmLabel = props.confirmLabel ?? 'Confirm';
+
   return (
-    <Modal opened={opened} onClose={close} title={title} centered>
-      <div className="my-2">{message}</div>
+    <Modal
+      opened={props.opened}
+      onClose={props.close}
+      title={props.title}
+      centered
+    >
+      <div className="my-2">{props.message}</div>
       <div className="flex flex-row gap-8">
-        <Button onClick={close} fullWidth color="gray" c="blue">
+        <Button onClick={props.close} fullWidth variant="light">
           {cancelLabel}
         </Button>
-        <Button onClick={onConfirm} fullWidth>
+        <Button onClick={props.onConfirm} fullWidth>
           {confirmLabel}
         </Button>
       </div>

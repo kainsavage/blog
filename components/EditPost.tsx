@@ -14,11 +14,15 @@ import { useDropzone } from 'react-dropzone';
 import { useDisclosure } from '@mantine/hooks';
 import Confirm from '@/components/Confirm';
 
+interface EditPostProps {
+  post?: Post;
+}
+
 /**
  * Technically, this component is create/edit post based on whether you pass an existing post to
  * it or not.
  */
-export default function EditPost({ post }: { post?: Post }) {
+export default function EditPost({ post }: EditPostProps) {
   const router = useRouter();
   const form = useForm({
     initialValues: {

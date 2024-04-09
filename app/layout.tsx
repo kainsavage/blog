@@ -6,7 +6,7 @@ import './prism.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
-import { theme } from '@/theme';
+import { theme } from '@/components/Theme';
 import { ReactNode } from 'react';
 import AppShell from '@/components/AppShell';
 import { getServerSession } from 'next-auth';

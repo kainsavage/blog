@@ -2,16 +2,19 @@
 
 import { Post } from '@/helpers/db';
 import { Popover, Text } from '@mantine/core';
+import { ReactNode } from 'react';
+
+interface CopyPopoverProps {
+  post: Post;
+  toCopy: string;
+  children: ReactNode;
+}
 
 export default function CopyPopover({
   post,
   toCopy,
   children,
-}: {
-  post: Post;
-  toCopy: string;
-  children: React.ReactNode;
-}) {
+}: CopyPopoverProps) {
   return (
     <Popover
       width={200}

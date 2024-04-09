@@ -8,17 +8,19 @@ import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import CopyPopover from '@/components/CopyPopover';
 import slugs from '@/helpers/slugs';
 
+interface BlogPostProps {
+  post: Post;
+  canEdit?: boolean;
+  hydratedHtml?: string;
+  showImage?: boolean;
+}
+
 export default function BlogPost({
   post,
   canEdit = false,
   hydratedHtml,
   showImage = false,
-}: {
-  post: Post;
-  canEdit?: boolean;
-  hydratedHtml?: string;
-  showImage?: boolean;
-}) {
+}: BlogPostProps) {
   return (
     <div className="flex-col flex-grow">
       {showImage && (
