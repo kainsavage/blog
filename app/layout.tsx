@@ -1,8 +1,8 @@
+import './globals.css';
+import './prism.css';
 import '@mantine/core/styles/global.css';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
-import './globals.css';
-import './prism.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
