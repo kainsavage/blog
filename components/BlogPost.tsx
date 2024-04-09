@@ -30,6 +30,7 @@ export default function BlogPost({
           fetchPriority="low"
           loading="lazy"
           decoding="async"
+          className="max-w-[100%]"
         />
       )}
       <div className="flex flex-row justify-between">
