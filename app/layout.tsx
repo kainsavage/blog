@@ -49,7 +49,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        <ColorSchemeScript />
+        <ColorSchemeScript defaultColorScheme="dark" forceColorScheme="dark" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
@@ -60,7 +60,11 @@ export default async function RootLayout({
       <body className={inter.className}>
         <SessionProvider session={session}>
           <ReactQueryProvider>
-            <MantineProvider theme={theme} defaultColorScheme="dark">
+            <MantineProvider
+              theme={theme}
+              defaultColorScheme="dark"
+              forceColorScheme="dark"
+            >
               <Notifications position="top-right" zIndex={1000} />
               <AppShell>{children}</AppShell>
             </MantineProvider>
