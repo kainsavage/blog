@@ -16,7 +16,7 @@ export default function PostCard(props: PostCardProps) {
 
   return (
     <div
-      className={`z-[120] shadow-2xl shadow-gray-950 transition ease-in-out hover:scale-105 rounded-lg border-2 border-transparent ${props.className}`}
+      className={`z-[120] shadow-2xl shadow-gray-950 transition ease-in-out hover:md:scale-105 rounded-lg border-2 border-transparent ${props.className}`}
     >
       <div
         className="md:max-w-[320px] cursor-pointer"
