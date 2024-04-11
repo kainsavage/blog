@@ -41,6 +41,9 @@ interface PostProps {
   params: { slug: string };
 }
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function Post({ params }: PostProps) {
   const post = await db.getPostBySlug(params.slug);
   const session = await getServerSession();
