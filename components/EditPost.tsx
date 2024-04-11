@@ -164,6 +164,11 @@ export default function EditPost({ post }: EditPostProps) {
       loading: true,
     });
 
+    // TODO - we need to capture some metadata about the image.
+    //  We need height, width, and type, at a minimum. However, we should also
+    //  capture a smaller version of the same image to use as the blurry
+    //  background image for lazy-loading the hero on the blog post page.
+
     const resp = await fetch(fq`/api/image`, {
       method: 'POST',
       headers: {

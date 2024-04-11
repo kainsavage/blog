@@ -23,7 +23,8 @@ export default function BlogPost({
 }: BlogPostProps) {
   return (
     // TODO - add the blurry background image thing.
-    <div className="flex-col flex-grow">
+    //  Add background-image to this surrounding div.
+    <div className="flex-col flex-grow bg-cover bg-center">
       {showImage && (
         <img
           src={post.hero_url}
