@@ -24,6 +24,11 @@ export async function generateMetadata({
         {
           url: post?.hero_url || '',
           alt: post?.title || '',
+          secureUrl: post?.hero_url || '',
+          // TODO - implement this because stuff's borken.
+          // type: post?.hero_type || '',
+          // width: post?.hero_width || 1000,
+          // height: post?.hero_height || 500,
         },
       ],
       tags: post?.tags || [],

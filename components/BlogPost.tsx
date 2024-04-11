@@ -22,6 +22,7 @@ export default function BlogPost({
   showImage = false,
 }: BlogPostProps) {
   return (
+    // TODO - add the blurry background image thing.
     <div className="flex-col flex-grow">
       {showImage && (
         <img
@@ -30,7 +31,7 @@ export default function BlogPost({
           fetchPriority="low"
           loading="lazy"
           decoding="async"
-          className="max-w-[100%]"
+          className="object-center object-cover"
         />
       )}
       <div className="flex flex-row justify-between">

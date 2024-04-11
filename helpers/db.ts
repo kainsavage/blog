@@ -10,6 +10,10 @@ export type Post = {
   synopsis: string;
   tags: string;
   hero_url: string;
+  // TODO add more hero data:
+  //  hero_type: string;
+  //  hero_width: number;
+  //  hero_height: number;
   created_at: Date;
   updated_at?: Date;
   is_draft: boolean;
