@@ -43,7 +43,11 @@ export default function PostCard(props: PostCardProps) {
               <Pill
                 key={tag}
                 disabled
-                className="border border-[var(--mantine-color-text)] !cursor-auto"
+                style={{
+                  border: '1px solid var(--mantine-color-tan-2) !important',
+                  color: 'var(--mantine-color-tan-3)',
+                }}
+                className="!cursor-auto"
               >
                 {tag}
               </Pill>

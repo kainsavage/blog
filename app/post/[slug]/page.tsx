@@ -1,7 +1,6 @@
 import db from '@/helpers/db';
 import BlogPost from '@/components/BlogPost';
 import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
 import { md2html } from '@/helpers/markdown';
 import { getServerSession } from 'next-auth';
 
@@ -46,7 +45,10 @@ export default async function Post({ params }: PostProps) {
   const post = await db.getPostBySlug(params.slug);
   const session = await getServerSession();
   // TODO - not the way to do this. This really SHOULD be a 404 render.
-  if (!post || (post.is_draft && !session?.user)) redirect('/');
+  if (!post || (post.is_draft && !session?.user)) {
+    // This is an attempt to at least fix the redirect loop.
+    return <h1>Not found!</h1>;
+  }
   const html = await md2html(post.body);
 
   return (

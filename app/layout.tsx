@@ -1,3 +1,4 @@
+import './css-reset.css';
 import './globals.css';
 import './prism.css';
 import '@mantine/core/styles/global.css';

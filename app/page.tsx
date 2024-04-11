@@ -13,7 +13,7 @@ export default async function Home() {
 
   return (
     <div>
-      <div className="mb-2 p-2 w-full flex flex-row">
+      <div className="mb-2 p-2 w-full hidden md:flex flex-row">
         <div className="bg-gradient-to-r from-[var(--mantine-color-body)] to-black flex-grow" />
         <div className="mx-auto bg-black">
           <img
