@@ -2,6 +2,9 @@ import db from '@/helpers/db';
 import PostCard from '@/app/archive/components/PostCard';
 import { Title } from '@mantine/core';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 /**
  * For now, the homepage is just the most recent blog post.
  */

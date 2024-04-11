@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: 'Archive | Teamclerks',
 };
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function Archive() {
   const posts = await db.getAllPosts();
 
