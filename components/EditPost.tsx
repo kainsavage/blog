@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
 import { useDisclosure } from '@mantine/hooks';
 import Confirm from '@/components/Confirm';
+import { revalidatePath } from 'next/cache';
 
 interface EditPostProps {
   post?: Post;
@@ -151,7 +152,10 @@ export default function EditPost({ post }: EditPostProps) {
       message: 'Redirecting to edited post...',
       autoClose: 1000,
       onClose: () => {
-        router.push(fq`/post/${slugs.slugify(form.values.title)}`);
+        const path = fq`/post/${slugs.slugify(form.values.title)}`;
+        // This tells Next.js to revalidate the post page.
+        revalidatePath(path);
+        router.push(path);
       },
     });
   }
