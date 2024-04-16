@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
 import { useDisclosure } from '@mantine/hooks';
 import Confirm from '@/components/Confirm';
+import { convertUrlStringToFile, drawThumbnail } from '@/helpers/images';
 
 interface EditPostProps {
   post?: Post;
@@ -31,6 +32,7 @@ export default function EditPost({ post }: EditPostProps) {
       synopsis: post ? post.synopsis : '',
       tags: post ? post.tags : '',
       hero_url: post ? post.hero_url : '',
+      blurred_hero_data_url: post ? post.blurred_hero_data_url : '',
     },
   });
   if (!post) {
@@ -41,6 +43,7 @@ export default function EditPost({ post }: EditPostProps) {
       synopsis: '',
       tags: '',
       hero_url: '',
+      blurred_hero_data_url: '',
       is_draft: false,
       created_at: new Date(),
     };
@@ -132,6 +135,7 @@ export default function EditPost({ post }: EditPostProps) {
         synopsis: form.values.synopsis,
         tags: form.values.tags,
         hero_url: form.values.hero_url,
+        blurred_hero_data_url: form.values.blurred_hero_data_url,
       }),
     });
     notifications.hide(loading);
@@ -164,11 +168,11 @@ export default function EditPost({ post }: EditPostProps) {
       loading: true,
     });
 
-    // TODO - we need to capture some metadata about the image.
-    //  We need height, width, and type, at a minimum. However, we should also
-    //  capture a smaller version of the same image to use as the blurry
-    //  background image for lazy-loading the hero on the blog post page.
+    // Create the thumbnail
+    const thumbDataUrl = await drawThumbnail(file, 320);
+    const thumbnail = await convertUrlStringToFile(thumbDataUrl);
 
+    // Upload the hero image
     const resp = await fetch(fq`/api/image`, {
       method: 'POST',
       headers: {
@@ -176,7 +180,6 @@ export default function EditPost({ post }: EditPostProps) {
       },
       body: file,
     });
-    notifications.hide(loading);
 
     if (!resp.ok) {
       console.error('Failed to upload image', await resp.text());
@@ -185,10 +188,29 @@ export default function EditPost({ post }: EditPostProps) {
         message: 'Please try again later.',
         color: 'red',
       });
+      notifications.hide(loading);
       throw new Error('Failed to upload image');
     }
 
-    return (await resp.json()).url;
+    const heroUrl = (await resp.json()).url;
+
+    // Upload hero was successful - upload the thumbnail.
+    const thumbResp = await fetch(fq`/api/image`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': thumbnail.type,
+        'X-Thumbnail-Of': heroUrl,
+      },
+      body: thumbnail,
+    });
+
+    // Create the blurry image
+    const blurryDataUrl = await drawThumbnail(file, 32);
+    const blurry = await convertUrlStringToFile(thumbDataUrl);
+    form.setFieldValue('blurred_hero_data_url', blurryDataUrl);
+
+    notifications.hide(loading);
+    return heroUrl;
   }
 
   async function uploadHeroImage(event: ChangeEvent<HTMLInputElement>) {

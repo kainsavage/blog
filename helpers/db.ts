@@ -10,10 +10,7 @@ export type Post = {
   synopsis: string;
   tags: string;
   hero_url: string;
-  // TODO add more hero data:
-  //  hero_type: string;
-  //  hero_width: number;
-  //  hero_height: number;
+  blurred_hero_data_url?: string;
   created_at: Date;
   updated_at?: Date;
   is_draft: boolean;
@@ -63,11 +60,12 @@ async function createPost(
   synopsis: string,
   tags: string,
   hero_url: string,
+  blurred_hero_data_url: string,
 ) {
   if (!sql) return;
 
   const resp =
-    await sql`INSERT INTO posts (title, body, synopsis, tags, hero_url) VALUES (${title}, ${body}, ${synopsis}, ${tags}, ${hero_url})`;
+    await sql`INSERT INTO posts (title, body, synopsis, tags, hero_url, blurred_hero_data_url) VALUES (${title}, ${body}, ${synopsis}, ${tags}, ${hero_url}), ${blurred_hero_data_url}) RETURNING id`;
 
   if (resp.rowCount < 1) throw new Error('Failed to create post');
 }
@@ -82,6 +80,7 @@ async function editPost(
   synopsis: string,
   tags: string,
   hero_url: string,
+  blurred_hero_data_url: string,
 ) {
   if (!sql) return;
 
@@ -91,6 +90,7 @@ async function editPost(
        synopsis = ${synopsis},
        tags = ${tags},
        hero_url = ${hero_url},
+       blurred_hero_data_url = ${blurred_hero_data_url},
        updated_at = NOW() 
      WHERE id = ${id}`;
 

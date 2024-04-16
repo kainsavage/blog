@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { v4 as uuidv4 } from 'uuid';
 import { uploadPublicImage } from '@/helpers/s3';
+import { getHeroThumbnailUrl } from '@/helpers/images';
 
 /**
  * Uploads an image to the public S3 bucket, assigns it a randomly UUID filename, and returns the
@@ -19,7 +20,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const filename = `${uuidv4()}.${blob.type.split('/')[1]}`;
+    let filename = request.headers.get('X-Thumbnail-Of');
+    if (!filename) {
+      // This is a hero image - generate a random filename.
+      filename = `${uuidv4()}.${blob.type.split('/')[1]}`;
+    } else {
+      filename = getHeroThumbnailUrl(filename);
+    }
     const file = new File([blob], filename, { type: blob.type });
     await uploadPublicImage(file);
 

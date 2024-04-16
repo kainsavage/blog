@@ -8,7 +8,8 @@ export async function PUT(request: NextRequest) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { id, title, body, synopsis, tags, hero_url } = await request.json();
+  const { id, title, body, synopsis, tags, hero_url, blurred_hero_data_url } =
+    await request.json();
 
   if (!title || !body) {
     return Response.json({ error: 'Invalid request' }, { status: 400 });
@@ -16,7 +17,14 @@ export async function PUT(request: NextRequest) {
 
   try {
     if (!id) {
-      await db.createPost(title, body, synopsis, tags, hero_url);
+      await db.createPost(
+        title,
+        body,
+        synopsis,
+        tags,
+        hero_url,
+        blurred_hero_data_url,
+      );
     } else {
       await db.editPost(
         parseInt(id, 10),
@@ -25,6 +33,7 @@ export async function PUT(request: NextRequest) {
         synopsis,
         tags,
         hero_url,
+        blurred_hero_data_url,
       );
     }
   } catch (e) {

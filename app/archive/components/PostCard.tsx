@@ -3,8 +3,9 @@
 import { Post } from '@/helpers/db';
 import slugs from '@/helpers/slugs';
 import PostedDate from '@/components/PostedDate';
-import { BackgroundImage, Pill } from '@mantine/core';
+import { Pill } from '@mantine/core';
 import { useRouter } from 'next/navigation';
+import { getHeroThumbnailUrl } from '@/helpers/images';
 
 interface PostCardProps {
   post: Post;
@@ -23,9 +24,9 @@ export default function PostCard(props: PostCardProps) {
         onClick={() => router.push(`/post/${slugs.slugify(props.post.title)}`)}
       >
         <div className="rounded-t-lg border-t-2 border-transparent min-w-full h-[205px] md:h-[140px] overflow-hidden">
-          <BackgroundImage
-            src={props.post.hero_url}
-            className=" w-full h-[500px]"
+          <img
+            src={getHeroThumbnailUrl(props.post.hero_url, true)}
+            alt={`${props.post.title} thumbnail`}
           />
         </div>
         <div className="flex flex-col gap-2 p-4">

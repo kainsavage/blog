@@ -22,18 +22,25 @@ export default function BlogPost({
   showImage = false,
 }: BlogPostProps) {
   return (
-    // TODO - add the blurry background image thing.
-    //  Add background-image to this surrounding div.
-    <div className="flex-col flex-grow bg-cover bg-center">
+    <div className="flex-col flex-grow">
       {showImage && (
-        <img
-          src={post.hero_url}
-          alt={post.synopsis}
-          fetchPriority="low"
-          loading="lazy"
-          decoding="async"
-          className="object-center object-cover"
-        />
+        <div
+          className="flex-col flex-grow bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${post.blurred_hero_data_url})`,
+          }}
+        >
+          <img
+            src={post.hero_url}
+            height={576}
+            width={1008}
+            alt={post.synopsis}
+            fetchPriority="low"
+            loading="lazy"
+            decoding="async"
+            className="object-center object-cover"
+          />
+        </div>
       )}
       <div className="flex flex-row justify-between">
         <CopyPopover
