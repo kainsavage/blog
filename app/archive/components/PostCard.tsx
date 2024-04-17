@@ -27,6 +27,7 @@ export default function PostCard(props: PostCardProps) {
           <img
             src={getHeroThumbnailUrl(props.post.hero_url, true)}
             alt={`${props.post.title} thumbnail`}
+            className="object-cover w-full"
           />
         </div>
         <div className="flex flex-col gap-2 p-4">

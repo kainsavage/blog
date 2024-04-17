@@ -35,20 +35,22 @@ export default function TeamclerksAppShell({
           </div>
         </Group>
       </AppShell.Header>
-      <AppShell.Main px={8} className="flex flex-col">
-        <Group className="mt-[-140px] flex md:!hidden mx-auto py-4">
-          <Logo />
-        </Group>
-        <Group>
-          <div className="flex md:!hidden justify-between gap-4 w-full pb-2">
-            <Link href={{ pathname: '/about' }}>About</Link>
-            <Link href={{ pathname: '/archive' }}>Archive</Link>
-            <Link href={{ pathname: 'mailto:kain@teamclerks.net' }}>
-              Contact
-            </Link>
-          </div>
-        </Group>
-        {children}
+      <AppShell.Main className="flex flex-col">
+        <div className="flex flex-col px-4">
+          <Group className="mt-[-140px] flex md:!hidden mx-auto py-4">
+            <Logo />
+          </Group>
+          <Group>
+            <div className="flex md:!hidden justify-between gap-4 w-full pb-2">
+              <Link href={{ pathname: '/about' }}>About</Link>
+              <Link href={{ pathname: '/archive' }}>Archive</Link>
+              <Link href={{ pathname: 'mailto:kain@teamclerks.net' }}>
+                Contact
+              </Link>
+            </div>
+          </Group>
+          {children}
+        </div>
       </AppShell.Main>
       {/*<AppShell.Footer className="mx-auto max-w-[1024px]">*/}
       {/*  Footer content */}
