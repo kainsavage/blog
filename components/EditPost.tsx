@@ -52,20 +52,18 @@ export default function EditPost({ post }: EditPostProps) {
   const [checked, setChecked] = useState(false);
   const imageRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
-  const onDrop = useCallback(async (acceptedFiles: Blob[]) => {
-    // In practice, I will only support uploading one image at a time.
-    const url = await upload_image(acceptedFiles[0]);
-    if (bodyRef.current) {
-      const start = bodyRef.current.selectionStart;
-      const end = bodyRef.current.selectionEnd;
-      form.setFieldValue(
-        'body',
-        form.values.body.slice(0, start) +
-          `![](${url})` +
-          form.values.body.slice(end),
-      );
-    }
-  }, []);
+  const onDrop = useCallback(
+    async (acceptedFiles: Blob[]) => {
+      // In practice, I will only support uploading one image at a time.
+      const url = await upload_image(acceptedFiles[0]);
+      if (bodyRef.current) {
+        const start = form.values.body.slice(0, bodyRef.current.selectionStart);
+        const end = form.values.body.slice(bodyRef.current.selectionEnd);
+        form.setFieldValue('body', `${start}![](${url})${end}`);
+      }
+    },
+    [form.values.body],
+  );
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     noClick: true,
