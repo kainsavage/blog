@@ -78,14 +78,6 @@ h6 {
 }
 
 /*
-Reset links to optimize for opt-in styling instead of opt-out.
-*/
-
-a {
-  text-decoration: inherit;
-}
-
-/*
 Add the correct font weight in Edge and Safari.
 */
 
@@ -158,7 +150,6 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: inherit; /* 1 */
   font-feature-settings: inherit; /* 1 */
   font-variation-settings: inherit; /* 1 */
   font-size: 100%; /* 1 */
@@ -249,7 +240,6 @@ Remove the inner padding in Chrome and Safari on macOS.
 
 ::-webkit-file-upload-button {
   -webkit-appearance: button; /* 1 */
-  font: inherit; /* 2 */
 }
 
 /*

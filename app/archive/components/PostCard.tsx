@@ -17,7 +17,7 @@ export default function PostCard(props: PostCardProps) {
 
   return (
     <div
-      className={`z-[120] shadow-2xl shadow-gray-950 transition ease-in-out hover:md:scale-105 rounded-lg border-2 border-transparent ${props.className}`}
+      className={`z-[120] shadow-2xl shadow-gray-950 transition ease-in-out hover:md:scale-105 rounded-lg border-y-2 border-transparent ${props.className}`}
     >
       <div
         className="md:max-w-[320px] cursor-pointer"
@@ -27,7 +27,7 @@ export default function PostCard(props: PostCardProps) {
           <img
             src={getHeroThumbnailUrl(props.post.hero_url, true)}
             alt={`${props.post.title} thumbnail`}
-            className="object-cover w-full"
+            className="object-center object-cover"
           />
         </div>
         <div className="flex flex-col gap-2 p-4">
