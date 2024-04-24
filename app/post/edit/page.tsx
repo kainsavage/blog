@@ -16,11 +16,14 @@ export default async function EditPostPage({
   const session = await getServerSession();
   if (!session || !session.user) redirect('/api/auth/signin');
 
-  const id = searchParams?.id;
-  let post;
-  if (id) {
-    post = await db.getPost(Number.parseInt(id));
-  }
+  // TODO - this should be an actual component to render a 404 page.
+  if (!searchParams?.id) return <h1>Not Found</h1>;
+
+  const id = Number.parseInt(searchParams.id);
+  const post = await db.getPost(id);
+
+  // TODO - this should be an actual component to render a 404 page.
+  if (!post) return <h1>Not Found</h1>;
 
   return <EditPost post={post} />;
 }
