@@ -1,6 +1,5 @@
 import slugs from '@/helpers/slugs';
 import bcrypt from 'bcrypt';
-import { User as AuthUser } from 'next-auth';
 import { sql } from '@vercel/postgres';
 
 export type Post = {
@@ -20,9 +19,7 @@ export type Post = {
 /**
  * Get all posts from the database.
  */
-async function getAllPosts(): Promise<Post[]> {
-  if (!sql) return [];
-
+async function getAllPosts() {
   // TODO - this should be a published_date, not created_at.
   const res =
     await sql`SELECT * from posts WHERE is_draft = FALSE ORDER BY created_at DESC`;
@@ -32,9 +29,7 @@ async function getAllPosts(): Promise<Post[]> {
 /**
  * Get the most recent post from the database.
  */
-async function getMostRecentPost(): Promise<Post> {
-  if (!sql) return {} as Post;
-
+async function getMostRecentPost() {
   // TODO - this should be a published_date, not created_at.
   const res =
     await sql`SELECT * from posts WHERE is_draft = FALSE ORDER BY created_at DESC LIMIT 1`;
@@ -44,9 +39,7 @@ async function getMostRecentPost(): Promise<Post> {
 /**
  * Get a post by its id.
  */
-async function getPost(id: number): Promise<Post | undefined> {
-  if (!sql) return;
-
+async function getPost(id: number) {
   const res = await sql`SELECT * from posts where id = ${id}`;
   return res.rows ? (res.rows[0] as Post) : undefined;
 }
@@ -62,12 +55,12 @@ async function createPost(
   hero_url: string,
   blurred_hero_data_url: string,
 ) {
-  if (!sql) return;
-
   const resp =
-    await sql`INSERT INTO posts (title, body, synopsis, tags, hero_url, blurred_hero_data_url) VALUES (${title}, ${body}, ${synopsis}, ${tags}, ${hero_url}), ${blurred_hero_data_url}) RETURNING id`;
+    await sql`INSERT INTO posts (title, body, synopsis, tags, hero_url, blurred_hero_data_url) VALUES (${title}, ${body}, ${synopsis}, ${tags}, ${hero_url}, ${blurred_hero_data_url}) RETURNING id`;
 
   if (resp.rowCount < 1) throw new Error('Failed to create post');
+
+  return resp.rows[0].id as number;
 }
 
 /**
@@ -82,8 +75,6 @@ async function editPost(
   hero_url: string,
   blurred_hero_data_url: string,
 ) {
-  if (!sql) return;
-
   const resp = await sql`UPDATE posts SET 
        title = ${title},
        body = ${body},
@@ -101,8 +92,6 @@ async function editPost(
  * Publish a post by its id.
  */
 async function publishPost(id: number) {
-  if (!sql) return;
-
   const resp =
     await sql`UPDATE posts SET is_draft = FALSE, published_at = NOW() WHERE id = ${id}`;
 
@@ -120,9 +109,10 @@ async function getPostBySlug(slug: string): Promise<Post | undefined> {
   return res.rows ? (res.rows[0] as Post) : undefined;
 }
 
-async function getRecentPosts(): Promise<Post[]> {
-  if (!sql) return [];
-
+/**
+ * Get the three most recent posts.
+ */
+async function getRecentPosts() {
   const res =
     await sql`SELECT * from posts WHERE is_draft = FALSE ORDER BY published_at DESC LIMIT 3`;
   return res.rows as Post[];
@@ -131,12 +121,7 @@ async function getRecentPosts(): Promise<Post[]> {
 /**
  * Checks that a user exists - does not return the user.
  */
-async function getUser(
-  username: string,
-  password: string,
-): Promise<AuthUser | undefined> {
-  if (!sql) return;
-
+async function getUser(username: string, password: string) {
   const res = await sql`SELECT * from users WHERE username = ${username}`;
 
   if (!res.rows || res.rows.length < 1) return undefined;

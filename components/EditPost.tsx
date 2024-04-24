@@ -11,12 +11,10 @@ import { notifications } from '@mantine/notifications';
 import slugs from '@/helpers/slugs';
 import { useRouter } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
-import { useDisclosure } from '@mantine/hooks';
-import Confirm from '@/components/Confirm';
 import { convertUrlStringToFile, drawThumbnail } from '@/helpers/images';
 
 interface EditPostProps {
-  post?: Post;
+  post: Post;
 }
 
 /**
@@ -35,19 +33,6 @@ export default function EditPost({ post }: EditPostProps) {
       blurred_hero_data_url: post ? post.blurred_hero_data_url : '',
     },
   });
-  if (!post) {
-    post = {
-      id: -1,
-      title: '',
-      body: '',
-      synopsis: '',
-      tags: '',
-      hero_url: '',
-      blurred_hero_data_url: '',
-      is_draft: false,
-      created_at: new Date(),
-    };
-  }
   const [preview, setPreview] = useState('');
   const [checked, setChecked] = useState(false);
   const imageRef = useRef<HTMLInputElement>(null);
@@ -68,11 +53,8 @@ export default function EditPost({ post }: EditPostProps) {
     onDrop,
     noClick: true,
   });
-  const [opened, { close, open }] = useDisclosure(false);
 
   async function publishPost() {
-    if (!post) return; // Impossible.
-
     const loading = notifications.show({
       title: 'Publishing post',
       message: 'Please wait...',
@@ -112,8 +94,6 @@ export default function EditPost({ post }: EditPostProps) {
   }
 
   async function savePost() {
-    if (!post) return; // Impossible.
-
     const loading = notifications.show({
       title: 'Saving post',
       message: 'Please wait...',
@@ -193,7 +173,7 @@ export default function EditPost({ post }: EditPostProps) {
     const heroUrl = (await resp.json()).url;
 
     // Upload hero was successful - upload the thumbnail.
-    const thumbResp = await fetch(fq`/api/image`, {
+    await fetch(fq`/api/image`, {
       method: 'POST',
       headers: {
         'Content-Type': thumbnail.type,
@@ -204,7 +184,6 @@ export default function EditPost({ post }: EditPostProps) {
 
     // Create the blurry image
     const blurryDataUrl = await drawThumbnail(file, 32);
-    const blurry = await convertUrlStringToFile(thumbDataUrl);
     form.setFieldValue('blurred_hero_data_url', blurryDataUrl);
 
     notifications.hide(loading);
@@ -235,7 +214,6 @@ export default function EditPost({ post }: EditPostProps) {
     <div className="md:w-[1008px]">
       <h1 className="text-xl md:text-3xl text-center py-4 px-2">Edit Post</h1>
       <Switch checked={checked} onChange={togglePreview} label="Preview" />
-      {post.is_draft && <Button onClick={publishPost}>Publish</Button>}
       {!checked ? (
         <>
           <input type="file" hidden ref={imageRef} onChange={uploadHeroImage} />
@@ -269,24 +247,13 @@ export default function EditPost({ post }: EditPostProps) {
             />
           </form>
           <Container mt="xl" className="flex flex-row gap-8">
-            <Button fullWidth onClick={open} variant="light">
-              Cancel
-            </Button>
-            <Button fullWidth onClick={savePost}>
+            <Button fullWidth onClick={savePost} variant="light">
               Save
             </Button>
+            <Button fullWidth onClick={publishPost}>
+              Publish
+            </Button>
           </Container>
-          <Confirm
-            title="Cancel?"
-            message="Are you sure you want to cancel editing? Unsaved changes will be lost."
-            cancelLabel="No, continue editing"
-            confirmLabel="Yes, cancel"
-            opened={opened}
-            close={close}
-            onConfirm={() =>
-              router.push(fq`/post/${slugs.slugify(post!.title)}`)
-            }
-          />
         </>
       ) : (
         <BlogPost

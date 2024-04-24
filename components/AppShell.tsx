@@ -5,12 +5,30 @@ import { ReactNode } from 'react';
 import { Group } from '@mantine/core';
 import Logo from '@/components/Logo';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function TeamclerksAppShell({
   children,
 }: {
   children: ReactNode;
 }) {
+  const router = useRouter();
+  const { status } = useSession();
+  const authenticated = status === 'authenticated';
+
+  async function createPost() {
+    if (authenticated) {
+      const resp = await fetch('/api/post', {
+        method: 'POST',
+      });
+      if (resp.ok) {
+        const { id } = await resp.json();
+        router.push(`/post/edit?id=${id}`);
+      }
+    }
+  }
+
   return (
     <AppShell
       header={{ height: { base: 140, md: 80, lg: 80 } }}
@@ -27,6 +45,11 @@ export default function TeamclerksAppShell({
         </Group>
         <Group>
           <div className="flex justify-between gap-4 w-full md:w-fit">
+            {authenticated && (
+              <Link href="#" onClick={createPost}>
+                New Post
+              </Link>
+            )}
             <Link href={{ pathname: '/about' }}>About</Link>
             <Link href={{ pathname: '/archive' }}>Archive</Link>
             <Link href={{ pathname: 'mailto:kain@teamclerks.net' }}>
