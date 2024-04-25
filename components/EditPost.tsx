@@ -4,7 +4,7 @@ import { Post } from '@/helpers/db';
 import { useForm } from '@mantine/form';
 import { Button, Container, Switch, Textarea, TextInput } from '@mantine/core';
 import { md2html } from '@/helpers/markdown';
-import { ChangeEvent, useCallback, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import BlogPost from '@/components/BlogPost';
 import { fq } from '@/helpers/fetch';
 import { notifications } from '@mantine/notifications';
@@ -12,27 +12,39 @@ import slugs from '@/helpers/slugs';
 import { useRouter } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
 import { convertUrlStringToFile, drawThumbnail } from '@/helpers/images';
+import { useDebounceCallback } from '@mantine/hooks';
+import { getPostState, getPostStateColor } from '@/helpers/post';
 
 interface EditPostProps {
   post: Post;
 }
 
 /**
- * Technically, this component is create/edit post based on whether you pass an existing post to
- * it or not.
+ * Edit post page.
+ *
+ * This component also handles whether the post is published or not. 'Published' is sort of a
+ * tri-state situation. If the post is published, it will be visible to everyone. If the post is
+ * saved but not published, then it is a draft and will only be visible to the author. If the post
+ * is published and then unpublished, it will be visible to the author but not to anyone else.
+ * Edits to a published post will not be visible until the post is published again. So, a post can
+ * exist the published state, but have unpublished edits.
  */
 export default function EditPost({ post }: EditPostProps) {
   const router = useRouter();
   const form = useForm({
     initialValues: {
-      title: post ? post.title : '',
-      body: post ? post.body : '',
-      synopsis: post ? post.synopsis : '',
-      tags: post ? post.tags : '',
-      hero_url: post ? post.hero_url : '',
-      blurred_hero_data_url: post ? post.blurred_hero_data_url : '',
+      title: post ? post.draft_title : '',
+      body: post ? post.draft_body : '',
+      synopsis: post ? post.draft_synopsis : '',
+      tags: post ? post.draft_tags : '',
+      hero_url: post ? post.draft_hero_url : '',
+      blurred_hero_data_url: post ? post.draft_blurred_hero_data_url : '',
     },
   });
+  const [canPublish, setCanPublish] = useState(false);
+  const [border, setBorder] = useState(
+    getPostStateColor(post, form.isDirty(), true),
+  );
   const [preview, setPreview] = useState('');
   const [checked, setChecked] = useState(false);
   const imageRef = useRef<HTMLInputElement>(null);
@@ -53,6 +65,36 @@ export default function EditPost({ post }: EditPostProps) {
     onDrop,
     noClick: true,
   });
+
+  useEffect(() => {
+    const state = getPostState(post, form.isDirty());
+    setCanPublish(state !== 'Dirty');
+    setBorder(getPostStateColor(post, form.isDirty(), true));
+  }, [form.isDirty()]);
+
+  // Add debounced auto-save feature to every input that has a draft associated with it.
+  const debouncedSavePost = useDebounceCallback(savePost, 5000);
+  useEffect(() => {
+    if (form.values.hero_url === post.hero_url) return;
+    // Note: this should, in theory, also save for the blurred hero data URL.
+    debouncedSavePost();
+  }, [form.values.title]);
+  useEffect(() => {
+    if (form.values.title === post.draft_title) return;
+    debouncedSavePost();
+  }, [form.values.title]);
+  useEffect(() => {
+    if (form.values.synopsis === post.draft_synopsis) return;
+    debouncedSavePost();
+  }, [form.values.synopsis]);
+  useEffect(() => {
+    if (form.values.tags === post.draft_tags) return;
+    debouncedSavePost();
+  }, [form.values.tags]);
+  useEffect(() => {
+    if (form.values.body === post.draft_body) return;
+    debouncedSavePost();
+  }, [form.values.body]);
 
   async function publishPost() {
     const loading = notifications.show({
@@ -95,8 +137,7 @@ export default function EditPost({ post }: EditPostProps) {
 
   async function savePost() {
     const loading = notifications.show({
-      title: 'Saving post',
-      message: 'Please wait...',
+      message: 'Saving post...',
       autoClose: false,
       loading: true,
     });
@@ -107,13 +148,13 @@ export default function EditPost({ post }: EditPostProps) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id: post.id === -1 ? undefined : post.id,
-        title: form.values.title,
-        body: form.values.body,
-        synopsis: form.values.synopsis,
-        tags: form.values.tags,
-        hero_url: form.values.hero_url,
-        blurred_hero_data_url: form.values.blurred_hero_data_url,
+        id: post.id,
+        draft_title: form.values.title,
+        draft_body: form.values.body,
+        draft_synopsis: form.values.synopsis,
+        draft_tags: form.values.tags,
+        draft_hero_url: form.values.hero_url,
+        draft_blurred_hero_data_url: form.values.blurred_hero_data_url,
       }),
     });
     notifications.hide(loading);
@@ -129,13 +170,10 @@ export default function EditPost({ post }: EditPostProps) {
     }
 
     notifications.show({
-      title: 'Post saved',
-      message: 'Redirecting to edited post...',
+      message: 'Post saved!',
       autoClose: 1000,
-      onClose: () => {
-        router.push(fq`/post/${slugs.slugify(form.values.title)}`);
-      },
     });
+    form.resetDirty();
   }
 
   async function upload_image(file: Blob): Promise<string> {
@@ -211,7 +249,7 @@ export default function EditPost({ post }: EditPostProps) {
   }
 
   return (
-    <div className="md:w-[1008px]">
+    <div className={`md:w-[1008px] md:p-4 border-2 ${border}`}>
       <h1 className="text-xl md:text-3xl text-center py-4 px-2">Edit Post</h1>
       <Switch checked={checked} onChange={togglePreview} label="Preview" />
       {!checked ? (
@@ -247,10 +285,7 @@ export default function EditPost({ post }: EditPostProps) {
             />
           </form>
           <Container mt="xl" className="flex flex-row gap-8">
-            <Button fullWidth onClick={savePost} variant="light">
-              Save
-            </Button>
-            <Button fullWidth onClick={publishPost}>
+            <Button fullWidth onClick={publishPost} disabled={!canPublish}>
               Publish
             </Button>
           </Container>

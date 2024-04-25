@@ -4,11 +4,17 @@ import { sql } from '@vercel/postgres';
 
 export type Post = {
   id: number;
+  draft_title: string;
   title: string;
+  draft_body: string;
   body: string;
+  draft_synopsis: string;
   synopsis: string;
+  draft_tags: string;
   tags: string;
+  draft_hero_url: string;
   hero_url: string;
+  draft_blurred_hero_data_url?: string;
   blurred_hero_data_url?: string;
   created_at: Date;
   updated_at?: Date;
@@ -19,10 +25,10 @@ export type Post = {
 /**
  * Get all posts from the database.
  */
-async function getAllPosts() {
-  // TODO - this should be a published_date, not created_at.
-  const res =
-    await sql`SELECT * from posts WHERE is_draft = FALSE ORDER BY created_at DESC`;
+async function getAllPosts(hideDrafts: boolean) {
+  const res = hideDrafts
+    ? await sql`SELECT * from posts WHERE is_draft = FALSE ORDER BY COALESCE(published_at, created_at) DESC`
+    : await sql`SELECT * from posts ORDER BY COALESCE(published_at, created_at) DESC`;
   return res.rows as Post[];
 }
 
@@ -30,9 +36,8 @@ async function getAllPosts() {
  * Get the most recent post from the database.
  */
 async function getMostRecentPost() {
-  // TODO - this should be a published_date, not created_at.
   const res =
-    await sql`SELECT * from posts WHERE is_draft = FALSE ORDER BY created_at DESC LIMIT 1`;
+    await sql`SELECT * from posts WHERE is_draft = FALSE ORDER BY published_at DESC LIMIT 1`;
   return res.rows[0] as Post;
 }
 
@@ -47,16 +52,8 @@ async function getPost(id: number) {
 /**
  * Create a new post.
  */
-async function createPost(
-  title: string,
-  body: string,
-  synopsis: string,
-  tags: string,
-  hero_url: string,
-  blurred_hero_data_url: string,
-) {
-  const resp =
-    await sql`INSERT INTO posts (title, body, synopsis, tags, hero_url, blurred_hero_data_url) VALUES (${title}, ${body}, ${synopsis}, ${tags}, ${hero_url}, ${blurred_hero_data_url}) RETURNING id`;
+async function createPost() {
+  const resp = await sql`INSERT INTO posts DEFAULT VALUES RETURNING id`;
 
   if (resp.rowCount < 1) throw new Error('Failed to create post');
 
@@ -76,12 +73,12 @@ async function editPost(
   blurred_hero_data_url: string,
 ) {
   const resp = await sql`UPDATE posts SET 
-       title = ${title},
-       body = ${body},
-       synopsis = ${synopsis},
-       tags = ${tags},
-       hero_url = ${hero_url},
-       blurred_hero_data_url = ${blurred_hero_data_url},
+       draft_title = ${title},
+       draft_body = ${body},
+       draft_synopsis = ${synopsis},
+       draft_tags = ${tags},
+       draft_hero_url = ${hero_url},
+       draft_blurred_hero_data_url = ${blurred_hero_data_url},
        updated_at = NOW() 
      WHERE id = ${id}`;
 
@@ -92,8 +89,16 @@ async function editPost(
  * Publish a post by its id.
  */
 async function publishPost(id: number) {
-  const resp =
-    await sql`UPDATE posts SET is_draft = FALSE, published_at = NOW() WHERE id = ${id}`;
+  const resp = await sql`UPDATE posts 
+      SET title = draft_title, 
+          synopsis = draft_synopsis,
+          tags = draft_tags,
+          body = draft_body,
+          hero_url = draft_hero_url,
+          draft_blurred_hero_data_url = draft_blurred_hero_data_url,
+          is_draft = FALSE, 
+          published_at = NOW() 
+    WHERE id = ${id}`;
 
   if (resp.rowCount < 1) throw new Error('Failed to publish post');
 }
