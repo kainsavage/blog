@@ -250,9 +250,6 @@ export default function EditPost({ post }: EditPostProps) {
 
   return (
     <div className={`md:w-[1008px] md:p-4 border-2 ${border}`}>
-      <div className="border-red-500 border-yellow-500 border-green-500 border-transparent">
-        {/* This is required so that these border rules actually get compiled into the final CSS. */}
-      </div>
       <h1 className="text-xl md:text-3xl text-center py-4 px-2">Edit Post</h1>
       <Switch checked={checked} onChange={togglePreview} label="Preview" />
       {!checked ? (
